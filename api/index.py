@@ -7,7 +7,9 @@ except ImportError:
     from mini_compiler import lexer, Parser, semantic_analysis, CodeGenerator
 
 app = FastAPI()
-
+@app.get("/")
+def home():
+    return {"status": "Compiler API is running", "docs_url": "/docs"}
 class CodePayload(BaseModel):
     source_code: str
 
