@@ -1,13 +1,8 @@
-# mini_compiler.py
-# Simple Mini Compiler:
-# 1) Lexical Analysis
-# 2) Syntax Analysis
-# 3) Semantic Analysis
-# 4) Three Address Code Generation
+# mini_compiler.py - Python Syntax Edition
 
-KEYWORDS = {"int", "print"}
+KEYWORDS = {"print"}
 OPERATORS = {"+", "-", "*", "/", "="}
-SYMBOLS = {";", "(", ")"}
+SYMBOLS = {"(", ")", ";"}
 
 
 class Token:
@@ -29,13 +24,29 @@ def lexer(source_code):
     while i < len(source_code):
         char = source_code[i]
 
+        # تجاهل المسافات والأسطر الفارغة
         if char.isspace():
             i += 1
             continue
 
-        if char.isalpha():
+        # دعم علامات التنصيص (Strings)
+        if char in ('"', "'"):
+            quote = char
+            i += 1
+            string_val = ""
+            while i < len(source_code) and source_code[i] != quote:
+                string_val += source_code[i]
+                i += 1
+            if i >= len(source_code):
+                raise Exception("Unterminated string literal")
+            i += 1  # تخطي علامة الإغلاق
+            tokens.append(Token("STRING", string_val))
+            continue
+
+        # دعم الكلمات والـ Identifiers مع الشرطة السفلية _
+        if char.isalpha() or char == "_":
             word = ""
-            while i < len(source_code) and source_code[i].isalnum():
+            while i < len(source_code) and (source_code[i].isalnum() or source_code[i] == "_"):
                 word += source_code[i]
                 i += 1
 
@@ -45,6 +56,7 @@ def lexer(source_code):
                 tokens.append(Token("IDENTIFIER", word))
             continue
 
+        # دعم الأرقام
         if char.isdigit():
             number = ""
             while i < len(source_code) and source_code[i].isdigit():
@@ -53,11 +65,13 @@ def lexer(source_code):
             tokens.append(Token("NUMBER", number))
             continue
 
+        # المعاملات الرياضية
         if char in OPERATORS:
             tokens.append(Token("OPERATOR", char))
             i += 1
             continue
 
+        # الرموز (الأقواس، الفاصلة المنقوطة إن وجدت)
         if char in SYMBOLS:
             tokens.append(Token("SYMBOL", char))
             i += 1
@@ -83,13 +97,10 @@ class Parser:
 
     def match(self, token_type, value=None):
         token = self.current_token()
-
         if token is None:
             raise Exception("Unexpected end of code")
-
         if token.type != token_type:
             raise Exception(f"Expected {token_type}, got {token.type}")
-
         if value is not None and token.value != value:
             raise Exception(f"Expected '{value}', got '{token.value}'")
 
@@ -98,30 +109,30 @@ class Parser:
 
     def parse(self):
         statements = []
-
         while self.current_token() is not None:
             statements.append(self.parse_statement())
-
+            # الفاصلة المنقوطة اختيارية: إن وجدت نتخطاها
+            if self.current_token() and self.current_token().type == "SYMBOL" and self.current_token().value == ";":
+                self.match("SYMBOL", ";")
         return statements
 
     def parse_statement(self):
         token = self.current_token()
 
-        if token.type == "KEYWORD" and token.value == "int":
-            return self.parse_declaration()
-
+        # أمر طباعة بايثون: print(...)
         if token.type == "KEYWORD" and token.value == "print":
             return self.parse_print()
 
+        # إسناد بايثون المباشر: x = 5 أو my_name = "mansour"
+        if token.type == "IDENTIFIER":
+            return self.parse_assignment()
+
         raise Exception(f"Invalid statement starting with: {token.value}")
 
-    def parse_declaration(self):
-        self.match("KEYWORD", "int")
+    def parse_assignment(self):
         var_name = self.match("IDENTIFIER").value
         self.match("OPERATOR", "=")
         expression = self.parse_expression()
-        self.match("SYMBOL", ";")
-
         return {
             "type": "declaration",
             "name": var_name,
@@ -131,13 +142,19 @@ class Parser:
     def parse_print(self):
         self.match("KEYWORD", "print")
         self.match("SYMBOL", "(")
-        var_name = self.match("IDENTIFIER").value
-        self.match("SYMBOL", ")")
-        self.match("SYMBOL", ";")
+        
+        # print تقبل متغير أو نص أو رقم
+        arg_token = self.current_token()
+        if arg_token.type in ("IDENTIFIER", "STRING", "NUMBER"):
+            self.pos += 1
+            arg = {"type": arg_token.type.lower(), "value": arg_token.value}
+        else:
+            raise Exception(f"Invalid argument inside print: {arg_token.value}")
 
+        self.match("SYMBOL", ")")
         return {
             "type": "print",
-            "name": var_name
+            "argument": arg
         }
 
     def parse_expression(self):
@@ -145,11 +162,9 @@ class Parser:
 
         while self.current_token() is not None:
             token = self.current_token()
-
             if token.type == "OPERATOR" and token.value in {"+", "-", "*", "/"}:
                 operator = self.match("OPERATOR").value
                 right = self.parse_term()
-
                 left = {
                     "type": "binary_expression",
                     "operator": operator,
@@ -158,25 +173,21 @@ class Parser:
                 }
             else:
                 break
-
         return left
 
     def parse_term(self):
         token = self.current_token()
-
         if token.type == "NUMBER":
-            value = self.match("NUMBER").value
-            return {
-                "type": "number",
-                "value": value
-            }
+            val = self.match("NUMBER").value
+            return {"type": "number", "value": val}
+
+        if token.type == "STRING":
+            val = self.match("STRING").value
+            return {"type": "string", "value": f'"{val}"'}
 
         if token.type == "IDENTIFIER":
             name = self.match("IDENTIFIER").value
-            return {
-                "type": "identifier",
-                "name": name
-            }
+            return {"type": "identifier", "name": name}
 
         raise Exception(f"Invalid expression term: {token.value}")
 
@@ -191,25 +202,21 @@ def semantic_analysis(ast):
     def check_expression(expression):
         if expression["type"] == "identifier":
             if expression["name"] not in declared_variables:
-                errors.append(f"Undeclared variable: {expression['name']}")
-
+                errors.append(f"NameError: name '{expression['name']}' is not defined")
         elif expression["type"] == "binary_expression":
             check_expression(expression["left"])
             check_expression(expression["right"])
 
     for statement in ast:
         if statement["type"] == "declaration":
-            var_name = statement["name"]
-
-            if var_name in declared_variables:
-                errors.append(f"Duplicate variable declaration: {var_name}")
-            else:
-                check_expression(statement["expression"])
-                declared_variables.add(var_name)
+            check_expression(statement["expression"])
+            # بايثون تقبل إعادة تعريف المتغير بنفس الاسم
+            declared_variables.add(statement["name"])
 
         elif statement["type"] == "print":
-            if statement["name"] not in declared_variables:
-                errors.append(f"Undeclared variable: {statement['name']}")
+            arg = statement["argument"]
+            if arg["type"] == "identifier" and arg["value"] not in declared_variables:
+                errors.append(f"NameError: name '{arg['value']}' is not defined")
 
     return errors
 
@@ -227,7 +234,7 @@ class CodeGenerator:
         return f"t{self.temp_count}"
 
     def generate_expression(self, expression):
-        if expression["type"] == "number":
+        if expression["type"] in ("number", "string"):
             return expression["value"]
 
         if expression["type"] == "identifier":
@@ -237,11 +244,7 @@ class CodeGenerator:
             left = self.generate_expression(expression["left"])
             right = self.generate_expression(expression["right"])
             temp = self.new_temp()
-
-            self.code.append(
-                f"{temp} = {left} {expression['operator']} {right}"
-            )
-
+            self.code.append(f"{temp} = {left} {expression['operator']} {right}")
             return temp
 
     def generate(self, ast):
@@ -251,53 +254,7 @@ class CodeGenerator:
                 self.code.append(f"{statement['name']} = {result}")
 
             elif statement["type"] == "print":
-                self.code.append(f"print {statement['name']}")
+                val = statement["argument"]["value"]
+                self.code.append(f"print {val}")
 
         return self.code
-
-
-# -----------------------------
-# Helper Function
-# -----------------------------
-def print_syntax_tree(ast):
-    for statement in ast:
-        print(statement)
-
-
-def run_compiler(source_code):
-    print("=" * 50)
-    print("SOURCE CODE:")
-    print(source_code)
-
-    try:
-        print("\nTOKENS:")
-        tokens = lexer(source_code)
-        for token in tokens:
-            print(token)
-
-        print("\nSYNTAX TREE:")
-        parser = Parser(tokens)
-        ast = parser.parse()
-        print_syntax_tree(ast)
-
-        print("\nSEMANTIC CHECK:")
-        errors = semantic_analysis(ast)
-
-        if errors:
-            for error in errors:
-                print("Error:", error)
-            return
-
-        print("No errors")
-
-        print("\nTHREE ADDRESS CODE:")
-        generator = CodeGenerator()
-        tac = generator.generate(ast)
-
-        for line in tac:
-            print(line)
-
-    except Exception as e:
-        print("Compiler Error:", e)
-
-
