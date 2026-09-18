@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mini Compiler Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --line:#1b2237;
+    --card-a:rgba(18,23,41,.85);
+    --card-b:rgba(11,15,28,.85);
+  }
+  *{scrollbar-width:thin;scrollbar-color:#2b3450 transparent}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:#2b3450;border-radius:8px}
+  ::-webkit-scrollbar-thumb:hover{background:#3d4a6e}
+  ::-webkit-scrollbar-track{background:transparent}
+
+  body{font-family:'Inter',system-ui,sans-serif;background:#05070f;overflow-x:hidden}
+  .mono{font-family:'Fira Code',ui-monospace,monospace}
+
+  .aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:.28;animation:float 20s ease-in-out infinite}
+  @keyframes float{
+    0%,100%{transform:translate3d(0,0,0) scale(1)}
+    50%{transform:translate3d(50px,-40px,0) scale(1.18)}
+  }
+  .grid-overlay{
+    position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35;
+    background-image:linear-gradient(rgba(99,102,241,.06) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(99,102,241,.06) 1px,transparent 1px);
+    background-size:52px 52px;
+    mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 30%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 30%,transparent 75%);
+  }
+
+  .card{
+    position:relative;
+    background:linear-gradient(180deg,var(--card-a),var(--card-b));
+    border:1px solid var(--line);
+    border-radius:16px;
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    transition:border-color .35s,box-shadow .35s,transform .35s cubic-bezier(.2,.8,.2,1);
+    transform-style:preserve-3d;
+    will-change:transform;
+  }
+  .card:hover{
+    border-color:rgba(99,102,241,.45);
+    box-shadow:0 24px 50px -26px rgba(99,102,241,.75),0 0 0 1px rgba(99,102,241,.12) inset;
+  }
+  .card-hd{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:10px 14px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.035),transparent);
+  }
+  .card-title{
+    display:flex;align-items:center;gap:8px;
+    font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#8b96b5;
+  }
+  .card-title svg{width:14px;height:14px;flex:none}
+
+  #editor{
+    background:transparent;border:0;outline:0;resize:none;
+    color:#7ee7c7;caret-color:#6366f1;
+    font-size:13px;line-height:24px;padding:16px 16px 16px 6px;
+    tab-size:2;
+  }
+  #editor::selection{background:rgba(99,102,241,.35)}
+  #gutter{
+    font-size:13px;line-height:24px;padding:16px 8px 16px 14px;
+    color:#3b4560;text-align:right;user-select:none;overflow:hidden;
+  }
+
+  .tk{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 9px;border-radius:8px;border:1px solid;font-size:11px;
+    animation:pop .35s cubic-bezier(.2,.9,.3,1.4) both;
+    transition:transform .18s;
+  }
+  .tk:hover{transform:translateY(-2px) scale(1.05)}
+  @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.85)}to{opacity:1;transform:none}}
+
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .rise{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .spin{animation:spin .8s linear infinite}
+
+  .btn-run{
+    position:relative;overflow:hidden;
+    background:linear-gradient(120deg,#4f46e5,#7c3aed,#4f46e5);
+    background-size:200% 100%;
+    box-shadow:0 10px 26px -12px rgba(99,102,241,.9);
+    transition:transform .18s,box-shadow .25s,background-position .6s;
+  }
+  .btn-run:hover{background-position:100% 0;box-shadow:0 14px 34px -12px rgba(124,58,237,1);transform:translateY(-1px)}
+  .btn-run:active{transform:scale(.96)}
+  .btn-run:disabled{opacity:.65;cursor:not-allowed;transform:none}
+
+  .stat{
+    display:flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:999px;
+    border:1px solid var(--line);background:rgba(255,255,255,.02);
+    font-size:11px;color:#94a3b8;
+    transition:.25s;
+  }
+  .stat b{color:#e2e8f5;font-weight:600}
+  .stat:hover{border-color:rgba(99,102,241,.5);background:rgba(99,102,241,.08)}
+
+  .pill{font-size:10px;padding:2px 8px;border-radius:999px;letter-spacing:.04em}
+  .fade-in{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+</style>
+</head>
+
+<body class="text-slate-200 min-h-screen">
+
+<div class="aurora">
+  <span class="blob" style="width:460px;height:460px;background:#4f46e5;top:-160px;left:-120px"></span>
+  <span class="blob" style="width:400px;height:400px;background:#0891b2;bottom:-160px;right:-100px;animation-delay:-7s"></span>
+  <span class="blob" style="width:320px;height:320px;background:#a855f7;top:38%;left:46%;animation-delay:-13s"></span>
+</div>
+<div class="grid-overlay"></div>
+
+<div class="relative z-10 max-w-[1500px] mx-auto p-4 md:p-6 space-y-5">
+
+  <header class="card rise flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 md:px-6">
+    <div class="flex items-center gap-3.5">
+      <div class="relative">
+        <div class="absolute inset-0 rounded-xl bg-indigo-500 blur-lg opacity-60"></div>
+        <div class="relative w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 grid place-items-center shadow-lg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-lg md:text-xl font-bold text-white tracking-tight flex items-center gap-2">
+          Mini Compiler Studio
+          <span class="pill bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">v2.0</span>
+        </h1>
+        <p class="text-[11px] text-slate-400 mt-0.5">Lexer · Parser · Semantic Analyzer · Three-Address Code</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <span id="statusPill" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-700/60 bg-slate-800/40 text-[11px] text-slate-400">
+        <span id="statusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        <span id="statusText">Ready</span>
+      </span>
+
+      <button id="runBtn" onclick="runCompiler()"
+        class="btn-run text-white px-6 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2">
+        <span id="runIcon">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M8 5v14l11-7z"/></svg>
+        </span>
+        <span id="runLabel">Run Compiler</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="grid grid-cols-1 xl:grid-cols-12 gap-5">
+
+    <section class="xl:col-span-5 flex flex-col gap-5">
+      <div class="card tilt rise flex flex-col overflow-hidden flex-1" style="min-height:420px">
+        <div class="card-hd">
+          <span class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Source Code
+          </span>
+          <span class="text-[10px] mono text-slate-500">C-like syntax</span>
+        </div>
+
+        <div class="flex-1 flex overflow-hidden min-h-0">
+          <div id="gutter" class="mono select-none">1</div>
+          <textarea id="editor" spellcheck="false" class="mono flex-1" placeholder="// Write your code here...">int x = 5;
+int y = x + 3;
+print(y);</textarea>
+        </div>
+
+        <div class="border-t border-[var(--line)] px-3 py-2.5 flex flex-wrap items-center gap-2">
+          <span class="stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" class="w-3 h-3"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+            Tokens <b id="statTokens">0</b>
+          </span>
+          <span class="stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" class="w-3 h-3"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+            Errors <b id="statErrors">0</b>
+          </span>
+          <span class="stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" class="w-3 h-3"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+            TAC <b id="statTac">0</b>
+          </span>
+          <span class="stat ml-auto">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" class="w-3 h-3"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg>
+            <b id="statTime">—</b>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section class="xl:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-5">
+
+      <div class="card tilt rise flex flex-col overflow-hidden" style="min-height:270px">
+        <div class="card-hd">
+          <span class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3a1 1 0 0 1 0-1.4L15.4 2.6a1 1 0 0 1 1.4 0l4.3 4.3a1 1 0 0 1 0 1.4L8.4 21a1 1 0 0 1-1.4 0Z"/><path d="m14 7 3 3"/></svg>
+            Lexical Tokens
+          </span>
+          <span id="tokenCount" class="text-[10px] mono text-slate-500">0</span>
+        </div>
+        <div id="tokensBox" class="p-4 flex-1 overflow-y-auto flex flex-wrap content-start gap-1.5"></div>
+      </div>
+
+      <div class="card tilt rise flex flex-col overflow-hidden" style="min-height:270px">
+        <div class="card-hd">
+          <span class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            Semantic Analysis
+          </span>
+        </div>
+        <div id="semanticBox" class="p-4 flex-1 overflow-y-auto flex items-center justify-center"></div>
+      </div>
+
+      <div class="card tilt rise flex flex-col overflow-hidden" style="min-height:290px">
+        <div class="card-hd">
+          <span class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="17" width="6" height="5" rx="1"/><rect x="16" y="17" width="6" height="5" rx="1"/><path d="M12 7v4M5 17v-3h14v3"/></svg>
+            Syntax Tree
+          </span>
+          <button onclick="copyBox('astBox')" class="text-slate-500 hover:text-indigo-300 transition text-[10px] mono">copy</button>
+        </div>
+        <pre id="astBox" class="mono flex-1 overflow-auto p-4 text-[11px] leading-relaxed text-amber-200/90 whitespace-pre"></pre>
+      </div>
+
+      <div class="card tilt rise flex flex-col overflow-hidden" style="min-height:290px">
+        <div class="card-hd">
+          <span class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>
+            Three Address Code
+          </span>
+          <button onclick="copyBox('tacBox')" class="text-slate-500 hover:text-sky-300 transition text-[10px] mono">copy</button>
+        </div>
+        <pre id="tacBox" class="mono flex-1 overflow-auto p-4 text-[11px] leading-relaxed text-sky-300 whitespace-pre"></pre>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="text-center text-[10px] text-slate-600 pb-2">
+    Mini Compiler Studio · <span class="mono">Ctrl</span> + <span class="mono">Enter</span> to compile
+  </footer>
+</div>
+
+<div id="toast" class="fixed bottom-6 right-6 z-50 hidden max-w-xs px-4 py-3 rounded-xl border border-red-500/40 bg-red-950/90 backdrop-blur text-red-200 text-xs shadow-2xl"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const EMPTY = txt => `<div class="m-auto flex flex-col items-center gap-2 text-slate-600">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-7 h-7 opacity-50">
+    <circle cx="12" cy="12" r="9"/><path d="M9 12h6"/></svg>
+  <span class="text-[11px] italic">${txt}</span></div>`;
+
+const editor = $('#editor'), gutter = $('#gutter');
+function syncGutter(){
+  const n = editor.value.split('\n').length;
+  let out = '';
+  for (let i = 1; i <= Math.max(n, 1); i++) out += i + '\n';
+  gutter.textContent = out;
+  gutter.scrollTop = editor.scrollTop;
+}
+editor.addEventListener('input', syncGutter);
+editor.addEventListener('scroll', () => gutter.scrollTop = editor.scrollTop);
+editor.addEventListener('keydown', e => {
+  if (e.key === 'Tab'){ e.preventDefault();
+    const s = editor.selectionStart, epos = editor.selectionEnd;
+    editor.value = editor.value.slice(0, s) + '  ' + editor.value.slice(epos);
+    editor.selectionStart = editor.selectionEnd = s + 2;
+    syncGutter();
+  }
+});
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); runCompiler(); }
+});
+syncGutter();
+
+function tokenClass(type){
+  const k = (type || '').toUpperCase();
+  if (k.includes('KEY'))                             return 'text-indigo-300 border-indigo-500/30 bg-indigo-500/10';
+  if (k.includes('ID') || k.includes('IDENT'))       return 'text-emerald-300 border-emerald-500/30 bg-emerald-500/10';
+  if (k.includes('NUM') || k.includes('INT') || k.includes('FLOAT')) return 'text-amber-300 border-amber-500/30 bg-amber-500/10';
+  if (k.includes('STR'))                             return 'text-pink-300 border-pink-500/30 bg-pink-500/10';
+  if (k.includes('OP'))                              return 'text-sky-300 border-sky-500/30 bg-sky-500/10';
+  if (k.includes('PUNC') || k.includes('SEP'))       return 'text-slate-300 border-slate-600/40 bg-slate-500/10';
+  if (k.includes('EOF'))                             return 'text-slate-500 border-slate-700/40 bg-slate-800/30';
+  return 'text-slate-300 border-slate-600/40 bg-slate-500/10';
+}
+
+function colorJSON(str){
+  return esc(str)
+    .replace(/&quot;([^&]*?)&quot;(\s*:)/g, '<span class="text-sky-400">&quot;$1&quot;</span>$2')
+    .replace(/:\s*&quot;([^&]*?)&quot;/g, ': <span class="text-emerald-400">&quot;$1&quot;</span>')
+    .replace(/:\s*(-?\d+\.?\d*)/g, ': <span class="text-orange-300">$1</span>')
+    .replace(/\b(true|false|null)\b/g, '<span class="text-violet-400">$1</span>');
+}
+
+function copyBox(id){
+  navigator.clipboard.writeText($('#'+id).innerText).then(() => toast('Copied to clipboard ✓', true));
+}
+
+let toastTimer;
+function toast(msg, ok){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = t.className.replace(/border-\S+|bg-\S+|text-\S+/g,'');
+  t.classList.add('fixed','bottom-6','right-6','z-50','max-w-xs','px-4','py-3','rounded-xl',
+    'border','backdrop-blur','text-xs','shadow-2xl',
+    ...(ok ? ['border-emerald-500/40','bg-emerald-950/90','text-emerald-200']
+           : ['border-red-500/40','bg-red-950/90','text-red-200']));
+  t.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
+}
+
+function setStatus(text, color){
+  $('#statusText').textContent = text;
+  $('#statusDot').className = 'w-1.5 h-1.5 rounded-full ' + color;
+}
+
+async function runCompiler(){
+  const btn = $('#runBtn');
+  const code = editor.value.trim();
+
+  if (!code){ toast('Please write some code first.'); return; }
+
+  btn.disabled = true;
+  $('#runLabel').textContent = 'Compiling…';
+  $('#runIcon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4 spin"><path d="M21 12a9 9 0 1 1-6.2-8.5" stroke-linecap="round"/></svg>';
+  setStatus('Compiling…', 'bg-amber-400 animate-pulse');
+
+  const t0 = performance.now();
+
+  try{
+    const res = await fetch('/compile', {
+      method : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify({ source_code: code })
+    });
+    if (!res.ok) throw new Error('Server responded ' + res.status);
+    const data = await res.json();
+    const elapsed = Math.round(performance.now() - t0);
+
+    const tokens = data.tokens || [];
+    $('#tokensBox').innerHTML = tokens.length
+      ? tokens.map((t, i) =>
+          `<span class="tk ${tokenClass(t.type)}" style="animation-delay:${Math.min(i * 16, 500)}ms">
+             <span class="opacity-60">${esc(t.type)}</span>
+             <span class="opacity-30">·</span>
+             <b class="font-medium">${esc(t.value)}</b>
+           </span>`).join('')
+      : EMPTY('No tokens produced');
+    $('#tokenCount').textContent = tokens.length;
+    $('#statTokens').textContent = tokens.length;
+
+    const errors = data.errors || [];
+    $('#statErrors').textContent = errors.length;
+    $('#semanticBox').innerHTML = errors.length
+      ? `<div class="w-full fade-in rounded-xl border border-red-500/30 bg-red-500/[.07] p-4">
+           <div class="flex items-center gap-2 mb-3">
+             <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+             <span class="text-[11px] font-semibold uppercase tracking-wider text-red-300">
+               ${errors.length} Error${errors.length > 1 ? 's' : ''} Detected
+             </span>
+           </div>
+           <ul class="space-y-2">
+             ${errors.map((e, i) =>
+               `<li class="fade-in flex gap-2 text-[11px] text-red-200/90 leading-relaxed" style="animation-delay:${i*70}ms">
+                  <span class="text-red-500 mono shrink-0">${String(i+1).padStart(2,'0')}</span>
+                  <span>${esc(e)}</span>
+                </li>`).join('')}
+           </ul>
+         </div>`
+      : `<div class="w-full fade-in rounded-xl border border-emerald-500/30 bg-emerald-500/[.07] p-5 text-center">
+           <div class="mx-auto w-10 h-10 rounded-full bg-emerald-500/15 grid place-items-center mb-3">
+             <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+               <polyline points="20 6 9 17 4 12"/></svg>
+           </div>
+           <p class="text-emerald-300 font-semibold text-xs">No Errors Found</p>
+           <p class="text-emerald-500/70 text-[10px] mt-1">Code passed semantic analysis</p>
+         </div>`;
+
+    const ast = data.syntax_tree;
+    $('#astBox').innerHTML = (ast && Object.keys(ast).length)
+      ? colorJSON(JSON.stringify(ast, null, 2))
+      : '<span class="text-slate-600 italic">No syntax tree generated</span>';
+
+    const tac = data.tac || [];
+    $('#statTac').textContent = tac.length;
+    $('#tacBox').innerHTML = tac.length
+      ? tac.map((line, i) =>
+          `<div class="fade-in flex gap-3" style="animation-delay:${Math.min(i*30,400)}ms">
+             <span class="text-slate-600 select-none w-5 text-right shrink-0">${i+1}</span>
+             <span>${esc(line)}</span>
+           </div>`).join('')
+      : '<span class="text-slate-600 italic">// No TAC generated</span>';
+
+    $('#statTime').textContent = elapsed + ' ms';
+    setStatus(errors.length ? `${errors.length} error(s)` : 'Compiled ✓',
+              errors.length ? 'bg-red-400' : 'bg-emerald-400');
+
+  }catch(err){
+    setStatus('Failed', 'bg-red-400');
+    toast('Compilation failed: ' + err.message);
+    $('#tokensBox').innerHTML = EMPTY('Request failed');
+    $('#semanticBox').innerHTML = EMPTY('Request failed');
+    $('#astBox').textContent = '—';
+    $('#tacBox').textContent = '—';
+  }finally{
+    btn.disabled = false;
+    $('#runLabel').textContent = 'Run Compiler';
+    $('#runIcon').innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M8 5v14l11-7z"/></svg>';
+  }
+}
+
+$('#tokensBox').innerHTML   = EMPTY('Run the compiler to see tokens');
+$('#semanticBox').innerHTML = EMPTY('Awaiting analysis');
+$('#astBox').innerHTML      = '<span class="text-slate-600 italic">AST will appear here…</span>';
+$('#tacBox').innerHTML      = '<span class="text-slate-600 italic">TAC instructions will appear here…</span>';
+
+if (window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+  document.querySelectorAll('.tilt').forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width  - .5;
+      const y = (e.clientY - r.top ) / r.height - .5;
+      el.style.transform =
+        `perspective(1100px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg) translateY(-4px)`;
+    });
+    el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+  });
+}
+</script>
+</body>
+</html>
