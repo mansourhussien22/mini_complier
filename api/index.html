@@ -17,31 +17,114 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* ═══════════════════════════════════════════
+     DARK MODE — cool / technical / night coding
+     ═══════════════════════════════════════════ */
   :root{
-    --bg:#060a12;--bg-radial:#0a1420;
-    --card-a:rgba(16,24,39,.85);--card-b:rgba(9,14,24,.85);
-    --line:#1a2536;--line-2:#2d4160;
-    --text:#e2e8f5;--text-head:#ffffff;--text-dim:#94a3b8;
-    --text-mute:#64748b;--text-code:#7ee7c7;--text-gutter:#334155;
-    --brand:#14b8a6;--brand-2:#06b6d4;
-    --brand-soft:rgba(20,184,166,.14);--brand-line:rgba(20,184,166,.32);
-    --surface-2:rgba(255,255,255,.02);--surface-3:rgba(255,255,255,.03);--surface-4:rgba(255,255,255,.035);
-    --scroll-thumb:#2d4160;--scroll-thumb-hover:#3d5878;--scroll-track:rgba(20,184,166,.03);
-    --grid-color:rgba(20,184,166,.05);--blob-opacity:.22;--splash-blob-opacity:.35;
-  }
-  [data-theme="light"]{
-    --bg:#f0f4f8;--bg-radial:#ffffff;
-    --card-a:rgba(255,255,255,.92);--card-b:rgba(248,250,252,.92);
-    --line:#d8e0ea;--line-2:#b8c5d6;
-    --text:#1e293b;--text-head:#0b1220;--text-dim:#475569;
-    --text-mute:#94a3b8;--text-code:#0d9488;--text-gutter:#cbd5e1;
-    --brand:#0d9488;--brand-2:#0891b2;
-    --brand-soft:rgba(13,148,136,.1);--brand-line:rgba(13,148,136,.35);
-    --surface-2:rgba(15,23,42,.02);--surface-3:rgba(15,23,42,.025);--surface-4:rgba(15,23,42,.03);
-    --scroll-thumb:#cbd5e1;--scroll-thumb-hover:#94a3b8;--scroll-track:rgba(13,148,136,.05);
-    --grid-color:rgba(13,148,136,.08);--blob-opacity:.14;--splash-blob-opacity:.25;
+    --bg:#060a12;
+    --bg-radial:#0a1420;
+    --card-a:rgba(16,24,39,.85);
+    --card-b:rgba(9,14,24,.85);
+    --line:#1a2536;
+    --line-2:#2d4160;
+
+    --text:#e2e8f5;
+    --text-head:#ffffff;
+    --text-dim:#94a3b8;
+    --text-mute:#64748b;
+    --text-code:#7ee7c7;
+    --text-gutter:#5c6b8a;
+
+    --brand:#14b8a6;
+    --brand-2:#06b6d4;
+    --brand-soft:rgba(20,184,166,.14);
+    --brand-line:rgba(20,184,166,.32);
+    --brand-shadow:rgba(20,184,166,.35);
+
+    --surface-2:rgba(255,255,255,.02);
+    --surface-3:rgba(255,255,255,.03);
+    --surface-4:rgba(255,255,255,.035);
+
+    --scroll-thumb:#2d4160;
+    --scroll-thumb-hover:#3d5878;
+    --scroll-track:rgba(20,184,166,.03);
+
+    --grid-color:rgba(20,184,166,.05);
+    --blob-opacity:.22;
+    --splash-blob-opacity:.35;
+
+    /* Token colors */
+    --tk-key:#5eead4;    --tk-key-bg:rgba(20,184,166,.1);   --tk-key-bd:rgba(20,184,166,.3);
+    --tk-id:#6ee7b7;     --tk-id-bg:rgba(16,185,129,.1);    --tk-id-bd:rgba(16,185,129,.3);
+    --tk-num:#fcd34d;    --tk-num-bg:rgba(245,158,11,.1);   --tk-num-bd:rgba(245,158,11,.3);
+    --tk-str:#f9a8d4;    --tk-str-bg:rgba(236,72,153,.1);   --tk-str-bd:rgba(236,72,153,.3);
+    --tk-op:#67e8f9;     --tk-op-bg:rgba(6,182,212,.1);     --tk-op-bd:rgba(6,182,212,.3);
+    --tk-punc:#cbd5e1;   --tk-punc-bg:rgba(148,163,184,.1); --tk-punc-bd:rgba(148,163,184,.3);
+    --tk-eof:#64748b;    --tk-eof-bg:rgba(100,116,139,.1);  --tk-eof-bd:rgba(100,116,139,.3);
+    --tk-other:#cbd5e1;  --tk-other-bg:rgba(148,163,184,.1);--tk-other-bd:rgba(148,163,184,.3);
+
+    /* JSON colors */
+    --cj-key:#0ea5e9;
+    --cj-str:#059669;
+    --cj-num:#d97706;
+    --cj-bool:#7c3aed;
   }
 
+  /* ═══════════════════════════════════════════
+     LIGHT MODE — warm / paper / coffee & notebook
+     Different palette entirely — not inverted
+     ═══════════════════════════════════════════ */
+  [data-theme="light"]{
+    --bg:#faf6ee;                 /* warm cream paper */
+    --bg-radial:#fffdf7;          /* pure warm white */
+    --card-a:rgba(255,255,255,.96);
+    --card-b:rgba(252,248,241,.96);
+    --line:#e8dcc4;               /* warm sand border */
+    --line-2:#d4c3a0;
+
+    --text:#3d3225;               /* deep warm brown */
+    --text-head:#1f1610;          /* near-black warm */
+    --text-dim:#6b5d48;           /* muted cocoa */
+    --text-mute:#a39580;          /* soft taupe */
+    --text-code:#92400e;          /* warm dark amber for code */
+    --text-gutter:#b8a88c;        /* warm stone */
+
+    --brand:#d97706;              /* rich amber — primary */
+    --brand-2:#059669;            /* deep emerald — secondary */
+    --brand-soft:rgba(217,119,6,.1);
+    --brand-line:rgba(217,119,6,.35);
+    --brand-shadow:rgba(217,119,6,.22);
+
+    --surface-2:rgba(61,50,37,.02);
+    --surface-3:rgba(61,50,37,.035);
+    --surface-4:rgba(61,50,37,.045);
+
+    --scroll-thumb:#d8cbb3;
+    --scroll-thumb-hover:#c4b393;
+    --scroll-track:rgba(217,119,6,.04);
+
+    --grid-color:rgba(217,119,6,.07);
+    --blob-opacity:.1;
+    --splash-blob-opacity:.2;
+
+    /* Token colors — warm palette for light */
+    --tk-key:#b45309;    --tk-key-bg:rgba(217,119,6,.1);   --tk-key-bd:rgba(217,119,6,.35);
+    --tk-id:#047857;     --tk-id-bg:rgba(5,150,105,.1);    --tk-id-bd:rgba(5,150,105,.35);
+    --tk-num:#92400e;    --tk-num-bg:rgba(146,64,14,.1);   --tk-num-bd:rgba(146,64,14,.35);
+    --tk-str:#9d174d;    --tk-str-bg:rgba(219,39,119,.08); --tk-str-bd:rgba(219,39,119,.3);
+    --tk-op:#0e7490;     --tk-op-bg:rgba(14,116,144,.1);   --tk-op-bd:rgba(14,116,144,.35);
+    --tk-punc:#57534e;   --tk-punc-bg:rgba(87,83,78,.08);  --tk-punc-bd:rgba(87,83,78,.25);
+    --tk-eof:#78716c;    --tk-eof-bg:rgba(120,113,108,.08);--tk-eof-bd:rgba(120,113,108,.25);
+    --tk-other:#57534e;  --tk-other-bg:rgba(87,83,78,.08); --tk-other-bd:rgba(87,83,78,.25);
+
+    /* JSON colors */
+    --cj-key:#0369a1;
+    --cj-str:#047857;
+    --cj-num:#b45309;
+    --cj-bool:#6d28d9;
+  }
+
+  /* ═══════════ BASE ═══════════ */
   *{scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) var(--scroll-track)}
   ::-webkit-scrollbar{width:10px;height:10px}
   ::-webkit-scrollbar-track{background:var(--scroll-track);border-radius:8px}
@@ -49,9 +132,11 @@
   ::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover);background-clip:content-box}
 
   body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);
-    overflow-x:hidden;transition:background .5s ease,color .35s ease}
+    overflow-x:hidden;transition:background .5s ease,color .35s ease;
+    -webkit-text-size-adjust:100%;text-size-adjust:100%}
   .mono{font-family:'Fira Code',ui-monospace,monospace}
 
+  /* Light-mode Tailwind overrides */
   [data-theme="light"] .text-white{color:var(--text-head)!important}
   [data-theme="light"] .text-slate-200{color:var(--text)!important}
   [data-theme="light"] .text-slate-300{color:var(--text-dim)!important}
@@ -63,11 +148,18 @@
   [data-theme="light"] .border-slate-700\/60{border-color:var(--line)!important}
   [data-theme="light"] .text-amber-200\/90{color:#92400e!important}
   [data-theme="light"] .text-cyan-300{color:#0e7490!important}
-  [data-theme="light"] .text-teal-300{color:#0f766e!important}
+  [data-theme="light"] .text-teal-300{color:#b45309!important}
+  [data-theme="light"] .text-emerald-300{color:#047857!important}
   [data-theme="light"] .text-emerald-400{color:#047857!important}
-  [data-theme="light"] .text-emerald-500\/70{color:rgba(4,120,87,.7)!important}
+  [data-theme="light"] .text-emerald-500\/70{color:rgba(4,120,87,.75)!important}
+  [data-theme="light"] .text-red-300{color:#b91c1c!important}
+  [data-theme="light"] .text-red-400{color:#991b1b!important}
+  [data-theme="light"] .bg-teal-500\/15{background:var(--brand-soft)!important}
+  [data-theme="light"] .border-teal-500\/30{border-color:var(--brand-line)!important}
+  [data-theme="light"] .bg-red-500\/20{background:rgba(185,28,28,.12)!important}
+  [data-theme="light"] .border-red-500\/40{border-color:rgba(185,28,28,.4)!important}
 
-  /* ═══════ SPLASH ═══════ */
+  /* ═══════════ SPLASH ═══════════ */
   .splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
     background:radial-gradient(ellipse at center,var(--bg-radial) 0%,var(--bg) 75%);
     transition:opacity .8s cubic-bezier(.4,0,.2,1),transform .8s cubic-bezier(.4,0,.2,1),background .5s ease}
@@ -75,12 +167,22 @@
   .splash.hidden{display:none}
   .splash-aurora{position:absolute;inset:0;overflow:hidden;pointer-events:none}
   .splash-blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:var(--splash-blob-opacity);
-    animation:float 14s ease-in-out infinite;transition:opacity .5s ease}
+    animation:float 14s ease-in-out infinite;transition:opacity .5s ease,background .5s ease}
+
+  /* Splash blobs change color in light mode */
+  .splash-blob.sb-1{background:#0d9488}
+  .splash-blob.sb-2{background:#0891b2}
+  .splash-blob.sb-3{background:#f59e0b}
+  [data-theme="light"] .splash-blob.sb-1{background:#f59e0b}
+  [data-theme="light"] .splash-blob.sb-2{background:#059669}
+  [data-theme="light"] .splash-blob.sb-3{background:#dc2626}
+
   .splash-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;padding:20px}
   .splash-logo{position:relative;width:120px;height:120px;perspective:900px;animation:logoIn 1s cubic-bezier(.2,.9,.3,1.15) both}
   @keyframes logoIn{0%{opacity:0;transform:rotateY(-110deg) scale(.3)}60%{opacity:1}100%{opacity:1;transform:rotateY(0) scale(1)}}
   .splash-ring{position:absolute;inset:-8px;border-radius:34px;border:1.5px solid var(--brand-line);animation:ringPulse 2.4s ease-out infinite}
   .splash-ring-2{animation-delay:1.2s;border-color:rgba(245,158,11,.35)}
+  [data-theme="light"] .splash-ring-2{border-color:rgba(5,150,105,.35)}
   @keyframes ringPulse{0%{transform:scale(.85);opacity:.85}100%{transform:scale(1.65);opacity:0}}
   .splash-icon{position:absolute;inset:0;display:grid;place-items:center;
     animation:floatY 3.2s ease-in-out infinite;transform-style:preserve-3d;
@@ -108,162 +210,31 @@
     box-shadow:0 0 12px var(--brand);animation:dotBounce 1.2s ease-in-out infinite}
   .splash-loader span:nth-child(2){animation-delay:.15s;background:var(--brand-2)}
   .splash-loader span:nth-child(3){animation-delay:.3s;background:#fbbf24}
+  [data-theme="light"] .splash-loader span:nth-child(3){background:#dc2626}
   @keyframes dotBounce{0%,100%{transform:translateY(0);opacity:.35}50%{transform:translateY(-9px);opacity:1}}
   .splash-progress{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--brand-soft);overflow:hidden}
   .splash-progress::after{content:'';display:block;height:100%;width:0;
     background:linear-gradient(90deg,var(--brand),var(--brand-2),#f59e0b);box-shadow:0 0 12px var(--brand);
     animation:progressFill 2.3s cubic-bezier(.3,.8,.2,1) forwards}
+  [data-theme="light"] .splash-progress::after{
+    background:linear-gradient(90deg,#d97706,#059669,#dc2626);box-shadow:0 0 12px rgba(217,119,6,.7)}
   @keyframes progressFill{to{width:100%}}
 
-  /* ═══════ DEVICE STAGE + FRAME ═══════ */
-  .device-stage{
-    min-height:100vh;
-    padding:74px 16px 32px;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    transition:padding .5s ease}
-
-  .device-frame{
-    width:100%;
-    max-width:var(--device-w,1500px);
-    padding:var(--device-pad,0);
-    border-radius:var(--device-radius,0);
-    background:var(--device-bezel,transparent);
-    position:relative;
-    transition:max-width .6s cubic-bezier(.2,.8,.2,1),
-               padding .5s ease,
-               border-radius .5s ease,
-               box-shadow .5s ease,
-               background .5s ease;
-    box-shadow:var(--device-shadow,none)}
-
-  .device-frame[data-device="mobile"]{
-    --device-w:390px;--device-pad:12px;--device-radius:44px;
-    --device-bezel:linear-gradient(145deg,#0f1626,#060a12);
-    --device-shadow:0 40px 90px -30px rgba(0,0,0,.9),
-                    0 0 0 1px rgba(20,184,166,.18),
-                    inset 0 0 0 1px rgba(255,255,255,.04)}
-  .device-frame[data-device="tablet"]{
-    --device-w:820px;--device-pad:16px;--device-radius:32px;
-    --device-bezel:linear-gradient(145deg,#0f1626,#060a12);
-    --device-shadow:0 40px 90px -30px rgba(0,0,0,.85),
-                    0 0 0 1px rgba(20,184,166,.14),
-                    inset 0 0 0 1px rgba(255,255,255,.04)}
-  .device-frame[data-device="laptop"]{
-    --device-w:1280px;--device-pad:12px 12px 24px;--device-radius:18px;
-    --device-bezel:linear-gradient(145deg,#0f1626,#060a12);
-    --device-shadow:0 40px 90px -30px rgba(0,0,0,.85),
-                    0 0 0 1px rgba(20,184,166,.12),
-                    inset 0 0 0 1px rgba(255,255,255,.04)}
-  .device-frame[data-device="desktop"]{
-    --device-w:1500px;--device-pad:0;--device-radius:0;
-    --device-bezel:transparent;--device-shadow:none}
-
-  .device-screen{
-    border-radius:var(--device-screen-radius,0);
-    overflow:hidden;
-    background:var(--bg);
-    position:relative;
-    transition:border-radius .5s ease,background .5s ease;
-    container-type:inline-size;
-    container-name:device}
-
-  .device-frame[data-device="mobile"] .device-screen{--device-screen-radius:34px}
-  .device-frame[data-device="tablet"] .device-screen{--device-screen-radius:18px}
-  .device-frame[data-device="laptop"] .device-screen{--device-screen-radius:8px}
-  .device-frame[data-device="desktop"] .device-screen{--device-screen-radius:0}
-
-  /* Notch / Camera */
-  .device-notch{position:absolute;z-index:10;background:#000;display:none;
-    transition:all .5s cubic-bezier(.2,.8,.2,1)}
-
-  .device-frame[data-device="mobile"] .device-notch{
-    display:block;top:24px;left:50%;transform:translateX(-50%);
-    width:112px;height:26px;border-radius:16px;
-    box-shadow:inset 0 -1px 3px rgba(20,184,166,.15)}
-  .device-frame[data-device="mobile"] .device-notch::after{
-    content:'';position:absolute;right:14px;top:50%;transform:translateY(-50%);
-    width:8px;height:8px;border-radius:50%;
-    background:radial-gradient(circle,#1a2536,#060a12);
-    box-shadow:inset 0 0 2px rgba(20,184,166,.4)}
-
-  .device-frame[data-device="tablet"] .device-notch{
-    display:block;top:20px;left:50%;transform:translateX(-50%);
-    width:9px;height:9px;border-radius:50%;
-    background:radial-gradient(circle,#1a2536,#060a12);
-    box-shadow:inset 0 0 3px rgba(20,184,166,.4),0 0 4px rgba(0,0,0,.6)}
-
-  .device-frame[data-device="laptop"] .device-notch{
-    display:block;top:6px;left:50%;transform:translateX(-50%);
-    width:6px;height:6px;border-radius:50%;
-    background:radial-gradient(circle,#1a2536,#060a12);
-    box-shadow:inset 0 0 2px rgba(20,184,166,.4)}
-
-  /* Home indicator (mobile) */
-  .device-frame[data-device="mobile"] .device-screen::after{
-    content:'';position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
-    width:130px;height:4px;border-radius:2px;
-    background:rgba(255,255,255,.25);
-    pointer-events:none;z-index:11}
-  [data-theme="light"] .device-frame[data-device="mobile"] .device-screen::after{
-    background:rgba(0,0,0,.2)}
-
-  /* Responsive overrides inside simulated frames */
-  .device-frame[data-device="mobile"] .resp-header{flex-direction:column!important;align-items:stretch!important}
-  .device-frame[data-device="mobile"] .resp-header-actions{justify-content:space-between}
-  .device-frame[data-device="mobile"] .resp-status{display:none!important}
-  .device-frame[data-device="mobile"] .resp-main{grid-template-columns:1fr!important}
-  .device-frame[data-device="mobile"] .resp-subgrid{grid-template-columns:1fr!important}
-  .device-frame[data-device="mobile"] .app-content{padding:12px!important}
-  .device-frame[data-device="mobile"] .resp-hide-mobile{display:none!important}
-
-  .device-frame[data-device="tablet"] .resp-main{grid-template-columns:1fr!important}
-  .device-frame[data-device="tablet"] .resp-subgrid{grid-template-columns:1fr 1fr!important}
-
-  .device-frame[data-device="laptop"] .resp-subgrid{grid-template-columns:1fr 1fr!important}
-
-  /* ═══════ DEVICE PICKER ═══════ */
-  .device-picker{
-    position:fixed;top:18px;left:50%;transform:translateX(-50%);
-    z-index:70;
-    display:flex;gap:4px;padding:5px;
-    background:var(--card-a);
-    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-    border:1px solid var(--brand-line);border-radius:14px;
-    box-shadow:0 12px 30px -12px rgba(0,0,0,.6);
-    opacity:0;transition:opacity .5s ease .3s,background .5s ease}
-  .app-wrap.ready ~ .device-picker,
-  .device-picker.show{opacity:1}
-
-  .device-picker .dp-btn{
-    width:38px;height:38px;border-radius:10px;
-    display:grid;place-items:center;
-    background:transparent;border:0;cursor:pointer;
-    color:var(--text-mute);
-    transition:transform .25s,background .25s,color .25s}
-  .device-picker .dp-btn:hover{
-    background:var(--brand-soft);color:var(--brand);
-    transform:translateY(-1px)}
-  .device-picker .dp-btn.active{
-    background:var(--brand-soft);color:var(--brand);
-    box-shadow:inset 0 0 0 1px var(--brand-line)}
-  .device-picker .dp-btn svg{width:20px;height:20px;transition:transform .35s cubic-bezier(.2,.9,.3,1.3)}
-  .device-picker .dp-btn:hover svg{transform:scale(1.08)}
-  .device-picker .dp-btn.active svg{transform:scale(1.05)}
-
-  .device-picker .dp-sep{
-    width:1px;background:var(--line);margin:6px 3px;align-self:stretch}
-
-  /* ═══════ APP WRAP + BACKGROUNDS ═══════ */
   .app-wrap{opacity:0;transform:translateY(10px);
     transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
   .app-wrap.ready{opacity:1;transform:none}
 
+  /* ═══════════ LIVE BG ═══════════ */
   .aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
   .aurora-inner{position:absolute;inset:-5%;transition:transform .8s cubic-bezier(.2,.8,.2,1);will-change:transform}
   .blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:var(--blob-opacity);
-    animation:float 20s ease-in-out infinite;transition:opacity .5s ease}
+    animation:float 20s ease-in-out infinite;transition:opacity .5s ease,background .5s ease}
+  .blob.ab-1{background:#0d9488}
+  .blob.ab-2{background:#0891b2}
+  .blob.ab-3{background:#f59e0b}
+  [data-theme="light"] .blob.ab-1{background:#fbbf24}
+  [data-theme="light"] .blob.ab-2{background:#34d399}
+  [data-theme="light"] .blob.ab-3{background:#f87171}
   @keyframes float{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(50px,-40px,0) scale(1.18)}}
   .grid-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.3;transition:opacity .5s ease;
     background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),
@@ -277,7 +248,7 @@
     transform:translate(-50%,-50%);animation:rippleOut .85s ease-out forwards}
   @keyframes rippleOut{to{width:340px;height:340px;opacity:0}}
 
-  /* ═══════ CARDS ═══════ */
+  /* ═══════════ CARDS ═══════════ */
   .card{position:relative;background:linear-gradient(180deg,var(--card-a),var(--card-b));
     border:1px solid var(--line);border-radius:16px;
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
@@ -285,30 +256,62 @@
     transform-style:preserve-3d;will-change:transform;
     display:flex;flex-direction:column;overflow:hidden}
   .card:hover{border-color:var(--brand-line);
-    box-shadow:0 24px 50px -26px var(--brand-line),0 0 0 1px var(--brand-soft) inset}
+    box-shadow:0 24px 50px -26px var(--brand-shadow),0 0 0 1px var(--brand-soft) inset}
   .card-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;
     border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--surface-4),transparent);
     flex-shrink:0}
   .card-title{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.09em;
     text-transform:uppercase;color:var(--text-dim)}
-  .card-title svg{width:14px;height:14px;flex:none}
+  .card-title svg{width:14px;height:14px;flex:none;color:var(--icon-color,currentColor)}
+  /* Icon per card — uses CSS vars so they change with theme */
+  .card-title.t-source {--icon-color:#2dd4bf} [data-theme="light"] .card-title.t-source {--icon-color:#d97706}
+  .card-title.t-tokens {--icon-color:#2dd4bf} [data-theme="light"] .card-title.t-tokens {--icon-color:#d97706}
+  .card-title.t-semantic{--icon-color:#34d399} [data-theme="light"] .card-title.t-semantic{--icon-color:#059669}
+  .card-title.t-ast    {--icon-color:#fbbf24} [data-theme="light"] .card-title.t-ast    {--icon-color:#b45309}
+  .card-title.t-tac    {--icon-color:#22d3ee} [data-theme="light"] .card-title.t-tac    {--icon-color:#0e7490}
+  .card-title.t-output {--icon-color:#34d399} [data-theme="light"] .card-title.t-output {--icon-color:#059669}
 
-  .editor-wrap{display:flex;position:relative;overflow:hidden}
-  #editor{background:transparent;border:0;outline:0;resize:none;
+  /* ═══════════ EDITOR + GUTTER ═══════════ */
+  .editor-wrap{display:flex;position:relative;overflow:hidden;min-width:0}
+
+  #gutter{
+    font-family:'Fira Code',ui-monospace,monospace;
+    font-size:13px;line-height:24px;
+    padding:14px 10px 14px 14px;
+    color:var(--text-gutter);
+    text-align:right;user-select:none;
+    overflow:hidden;flex-shrink:0;min-width:44px;
+    background:var(--surface-3);
+    white-space:pre;word-break:normal;
+    transition:color .35s ease,background .5s ease;
+    font-variant-numeric:tabular-nums}
+
+  #editor{
+    background:transparent;border:0;outline:0;resize:none;
     color:var(--text-code);caret-color:var(--brand);
-    font-size:13px;line-height:24px;padding:14px 14px 14px 6px;tab-size:2;
-    width:100%;min-height:100px;max-height:440px;overflow-y:auto;overflow-x:hidden;display:block;
+    font-family:'Fira Code',ui-monospace,monospace;
+    font-size:13px;line-height:24px;
+    padding:14px 14px 14px 12px;tab-size:2;
+    width:100%;min-width:0;min-height:120px;max-height:420px;
+    overflow-y:auto;overflow-x:hidden;display:block;
+    -webkit-appearance:none;appearance:none;border-radius:0;
+    -webkit-text-size-adjust:100%;
     transition:color .35s ease}
+
+  @media (max-width:640px){
+    #editor{font-size:16px;line-height:26px;padding:14px}
+    #gutter{font-size:16px;line-height:26px;padding:14px 10px 14px 12px;min-width:48px}
+  }
+
   #editor::selection{background:var(--brand-soft)}
-  #gutter{font-size:13px;line-height:24px;padding:14px 8px 14px 14px;
-    color:var(--text-gutter);text-align:right;user-select:none;
-    overflow:hidden;flex-shrink:0;min-width:38px;
-    background:var(--surface-3);transition:color .35s ease,background .5s ease}
 
   .card-body{overflow-y:auto;overflow-x:hidden;padding:14px;min-height:80px;max-height:300px}
 
-  .output-body{overflow-y:auto;padding:14px 16px;min-height:80px;max-height:260px;
-    font-family:'Fira Code',monospace;font-size:12.5px;line-height:1.7;
+  .output-body{
+    overflow-y:auto;padding:14px 16px;
+    min-height:80px;max-height:260px;
+    font-family:'Fira Code',monospace;
+    font-size:12.5px;line-height:1.7;
     color:var(--text-code);
     background:radial-gradient(ellipse at top left,var(--brand-soft),transparent 60%)}
   .output-body .out-line{display:flex;gap:10px;animation:rise .35s cubic-bezier(.2,.8,.2,1) both}
@@ -318,10 +321,26 @@
   #tokensBox{padding:14px;flex-wrap:wrap;display:flex;align-content:flex-start;gap:6px;
     overflow-y:auto;min-height:80px;max-height:240px}
 
-  .tk{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:8px;border:1px solid;font-size:11px;
+  /* Token chips — use CSS vars for both themes */
+  .tk{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:8px;
+    border:1px solid;font-size:11px;
     animation:pop .35s cubic-bezier(.2,.9,.3,1.4) both;transition:transform .18s}
   .tk:hover{transform:translateY(-2px) scale(1.05)}
+  .tk-key  {color:var(--tk-key);  background:var(--tk-key-bg);  border-color:var(--tk-key-bd)}
+  .tk-id   {color:var(--tk-id);   background:var(--tk-id-bg);   border-color:var(--tk-id-bd)}
+  .tk-num  {color:var(--tk-num);  background:var(--tk-num-bg);  border-color:var(--tk-num-bd)}
+  .tk-str  {color:var(--tk-str);  background:var(--tk-str-bg);  border-color:var(--tk-str-bd)}
+  .tk-op   {color:var(--tk-op);   background:var(--tk-op-bg);   border-color:var(--tk-op-bd)}
+  .tk-punc {color:var(--tk-punc); background:var(--tk-punc-bg); border-color:var(--tk-punc-bd)}
+  .tk-eof  {color:var(--tk-eof);  background:var(--tk-eof-bg);  border-color:var(--tk-eof-bd)}
+  .tk-other{color:var(--tk-other);background:var(--tk-other-bg);border-color:var(--tk-other-bd)}
   @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.85)}to{opacity:1;transform:none}}
+
+  /* JSON colors */
+  .cj-key {color:var(--cj-key)}
+  .cj-str {color:var(--cj-str)}
+  .cj-num {color:var(--cj-num)}
+  .cj-bool{color:var(--cj-bool)}
 
   @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
   .rise{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
@@ -331,14 +350,18 @@
 
   .btn-run{position:relative;overflow:hidden;
     background:linear-gradient(120deg,var(--brand),var(--brand-2),var(--brand));
-    background-size:200% 100%;box-shadow:0 10px 26px -12px var(--brand);
-    transition:transform .18s,box-shadow .25s,background-position .6s;color:#fff}
-  .btn-run:hover{background-position:100% 0;box-shadow:0 14px 34px -12px var(--brand-2);transform:translateY(-1px)}
+    background-size:200% 100%;box-shadow:0 10px 26px -12px var(--brand-shadow);
+    transition:transform .18s,box-shadow .25s,background-position .6s;color:#fff;
+    white-space:nowrap}
+  [data-theme="light"] .btn-run{color:#fffdf7} /* warm white for contrast */
+  .btn-run:hover{background-position:100% 0;transform:translateY(-1px);
+    box-shadow:0 14px 34px -12px var(--brand-shadow)}
   .btn-run:active{transform:scale(.96)}
   .btn-run:disabled{opacity:.65;cursor:not-allowed;transform:none}
 
   .stat{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;
-    border:1px solid var(--line);background:var(--surface-2);font-size:11px;color:var(--text-dim);transition:.25s}
+    border:1px solid var(--line);background:var(--surface-2);font-size:11px;color:var(--text-dim);
+    transition:.25s;white-space:nowrap}
   .stat b{color:var(--text);font-weight:600}
   .stat:hover{border-color:var(--brand-line);background:var(--brand-soft)}
 
@@ -346,29 +369,32 @@
 
   .icon-btn{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;
     border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);
-    transition:.25s;cursor:pointer}
+    transition:.25s;cursor:pointer;flex-shrink:0}
   .icon-btn:hover{border-color:var(--brand-line);color:var(--brand);background:var(--brand-soft)}
   .icon-btn.muted{color:#f87171;border-color:rgba(248,113,113,.4)}
   .icon-btn svg{transition:transform .4s cubic-bezier(.2,.9,.3,1.4)}
   .icon-btn:active svg{transform:rotate(180deg) scale(.9)}
 
-  /* Modal */
+  /* ═══════════ MODAL ═══════════ */
   .modal-bg{position:fixed;inset:0;z-index:200;background:rgba(3,5,12,.75);backdrop-filter:blur(8px);
     display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;
     transition:opacity .35s ease}
-  [data-theme="light"] .modal-bg{background:rgba(15,23,42,.35)}
+  [data-theme="light"] .modal-bg{background:rgba(61,50,37,.28)}
   .modal-bg.show{opacity:1;pointer-events:auto}
   .modal-card{width:100%;max-width:560px;max-height:82vh;border-radius:18px;overflow:hidden;
     background:linear-gradient(180deg,var(--card-a),var(--card-b));
     border:1px solid rgba(248,113,113,.32);
-    box-shadow:0 30px 70px -20px rgba(239,68,68,.5);display:flex;flex-direction:column;
+    box-shadow:0 30px 70px -20px rgba(239,68,68,.4);display:flex;flex-direction:column;
     transform:translateY(20px) scale(.96);transition:transform .35s cubic-bezier(.2,.9,.3,1.15)}
+  [data-theme="light"] .modal-card{border-color:rgba(185,28,28,.28);
+    box-shadow:0 30px 70px -20px rgba(185,28,28,.25)}
   .modal-bg.show .modal-card{transform:translateY(0) scale(1)}
   .modal-hd{padding:14px 18px;border-bottom:1px solid rgba(248,113,113,.18);
     background:linear-gradient(180deg,rgba(239,68,68,.1),transparent);
     display:flex;align-items:center;justify-content:space-between;gap:12px}
+  [data-theme="light"] .modal-hd{background:linear-gradient(180deg,rgba(185,28,28,.06),transparent)}
   .modal-title{display:flex;align-items:center;gap:10px;color:#fca5a5;font-weight:600;font-size:14px}
-  [data-theme="light"] .modal-title{color:#b91c1c}
+  [data-theme="light"] .modal-title{color:#991b1b}
   .modal-close{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;
     color:var(--text-dim);transition:.2s;cursor:pointer;background:transparent;border:0}
   .modal-close:hover{background:var(--surface-4);color:var(--text-head)}
@@ -377,26 +403,30 @@
   .err-item{border:1px solid rgba(248,113,113,.22);border-radius:12px;background:rgba(239,68,68,.05);
     overflow:hidden;transition:.25s;cursor:pointer}
   .err-item:hover{border-color:rgba(248,113,113,.45);background:rgba(239,68,68,.09)}
+  [data-theme="light"] .err-item{border-color:rgba(185,28,28,.2);background:rgba(254,226,226,.5)}
+  [data-theme="light"] .err-item:hover{border-color:rgba(185,28,28,.4);background:rgba(254,226,226,.75)}
   .err-head{padding:10px 14px;display:flex;align-items:flex-start;gap:10px}
   .err-stage{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
     padding:3px 8px;border-radius:999px;background:rgba(248,113,113,.15);color:#fca5a5;
     border:1px solid rgba(248,113,113,.3);flex-shrink:0;margin-top:2px}
-  [data-theme="light"] .err-stage{color:#b91c1c}
+  [data-theme="light"] .err-stage{background:rgba(185,28,28,.1);color:#991b1b;border-color:rgba(185,28,28,.3)}
   .err-msg{font-size:12px;color:#fecaca;line-height:1.5;flex:1}
   [data-theme="light"] .err-msg{color:#7f1d1d}
   .err-chev{color:#f87171;transition:transform .3s;flex-shrink:0;margin-top:2px}
+  [data-theme="light"] .err-chev{color:#b91c1c}
   .err-item.open .err-chev{transform:rotate(180deg)}
   .err-detail{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.8,.2,1);
     background:rgba(0,0,0,.3);border-top:0 solid rgba(248,113,113,.15)}
-  [data-theme="light"] .err-detail{background:rgba(0,0,0,.04)}
+  [data-theme="light"] .err-detail{background:rgba(120,53,15,.06)}
   .err-item.open .err-detail{max-height:500px;border-top:1px solid rgba(248,113,113,.15)}
+  [data-theme="light"] .err-item.open .err-detail{border-top-color:rgba(185,28,28,.2)}
   .err-detail-inner{padding:12px 14px;font-family:'Fira Code',monospace;font-size:11px;
     color:#fda4af;line-height:1.7;white-space:pre-wrap;word-break:break-word}
   [data-theme="light"] .err-detail-inner{color:#7f1d1d}
   .err-detail-inner .label{color:var(--text-dim);font-family:'Inter',sans-serif;font-size:10px;
     text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:4px}
 
-  /* Social dock */
+  /* ═══════════ SOCIAL DOCK ═══════════ */
   .social-dock{position:fixed;left:20px;bottom:20px;z-index:60;
     display:flex;flex-direction:column;gap:9px}
   .dock-btn{position:relative;width:42px;height:42px;border-radius:12px;
@@ -425,13 +455,26 @@
     transition:opacity .22s,transform .22s}
   .dock-btn:hover::after{opacity:1;transform:translateY(-50%) translateX(0)}
 
+  /* ═══════════ TOAST ═══════════ */
+  .toast{position:fixed;bottom:24px;right:24px;z-index:300;max-width:320px;
+    padding:12px 16px;border-radius:12px;font-size:12px;
+    border:1px solid;backdrop-filter:blur(10px);
+    box-shadow:0 12px 30px -10px rgba(0,0,0,.4);
+    transition:opacity .3s ease}
+  .toast.hidden{display:none}
+  .toast.ok{border-color:rgba(16,185,129,.4);background:rgba(6,78,59,.9);color:#a7f3d0}
+  .toast.err{border-color:rgba(248,113,113,.4);background:rgba(69,10,10,.9);color:#fecaca}
+  [data-theme="light"] .toast.ok{border-color:rgba(5,150,105,.4);background:rgba(209,250,229,.98);color:#065f46}
+  [data-theme="light"] .toast.err{border-color:rgba(185,28,28,.4);background:rgba(254,226,226,.98);color:#7f1d1d}
+
   @media (max-width:640px){
     .social-dock{left:12px;bottom:12px;gap:7px}
     .dock-btn{width:38px;height:38px;border-radius:11px}
     .dock-btn svg{width:17px;height:17px}
-    .device-picker{top:10px}
-    .device-picker .dp-btn{width:34px;height:34px}
-    .device-stage{padding:60px 8px 24px}
+    .dock-btn::after{display:none}
+    .card-body,#tokensBox{max-height:220px}
+    .output-body{max-height:200px}
+    #editor{max-height:340px}
   }
 
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
@@ -443,9 +486,9 @@
 <!-- SPLASH -->
 <div id="splash" class="splash">
   <div class="splash-aurora">
-    <span class="splash-blob" style="width:380px;height:380px;background:#0d9488;top:-120px;left:-100px"></span>
-    <span class="splash-blob" style="width:340px;height:340px;background:#0891b2;bottom:-140px;right:-80px;animation-delay:-6s"></span>
-    <span class="splash-blob" style="width:260px;height:260px;background:#f59e0b;top:35%;left:48%;animation-delay:-11s"></span>
+    <span class="splash-blob sb-1" style="width:380px;height:380px;top:-120px;left:-100px"></span>
+    <span class="splash-blob sb-2" style="width:340px;height:340px;bottom:-140px;right:-80px;animation-delay:-6s"></span>
+    <span class="splash-blob sb-3" style="width:260px;height:260px;top:35%;left:48%;animation-delay:-11s"></span>
   </div>
   <div class="splash-content">
     <div class="splash-logo">
@@ -454,15 +497,18 @@
         <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="lgMain" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#2dd4bf"/><stop offset="55%" stop-color="#14b8a6"/>
-              <stop offset="100%" stop-color="#0891b2"/></linearGradient>
+              <stop offset="0%" stop-color="var(--brand)"/>
+              <stop offset="100%" stop-color="var(--brand-2)"/>
+            </linearGradient>
             <linearGradient id="lgHi" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="rgba(255,255,255,.45)"/>
-              <stop offset="65%" stop-color="rgba(255,255,255,0)"/></linearGradient>
+              <stop offset="65%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
           </defs>
           <path d="M32 6 L52 18 L52 46 L32 58 L12 46 L12 18 Z" fill="url(#lgMain)"
-                stroke="rgba(45,212,191,.55)" stroke-width="1.4" stroke-linejoin="round"/>
-          <path d="M32 10 L48 19.5 L48 44.5 L32 54 L16 44.5 L16 19.5 Z" fill="url(#lgHi)" opacity=".75"/>
+                stroke="var(--brand-line)" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M32 10 L48 19.5 L48 44.5 L32 54 L16 44.5 L16 19.5 Z"
+                fill="url(#lgHi)" opacity=".75"/>
           <path class="path-draw" d="M26.5 25 L20.5 32 L26.5 39 M37.5 25 L43.5 32 L37.5 39"
                 stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
           <circle cx="32" cy="32" r="1.9" fill="white"/>
@@ -479,116 +525,93 @@
 
 <!-- BACKGROUNDS -->
 <div class="aurora"><div class="aurora-inner" id="auroraInner">
-  <span class="blob" style="width:460px;height:460px;background:#0d9488;top:-160px;left:-120px"></span>
-  <span class="blob" style="width:400px;height:400px;background:#0891b2;bottom:-160px;right:-100px;animation-delay:-7s"></span>
-  <span class="blob" style="width:320px;height:320px;background:#f59e0b;top:38%;left:46%;animation-delay:-13s"></span>
+  <span class="blob ab-1" style="width:460px;height:460px;top:-160px;left:-120px"></span>
+  <span class="blob ab-2" style="width:400px;height:400px;bottom:-160px;right:-100px;animation-delay:-7s"></span>
+  <span class="blob ab-3" style="width:320px;height:320px;top:38%;left:46%;animation-delay:-13s"></span>
 </div></div>
 <div class="grid-overlay"></div>
 
-<!-- DEVICE PICKER -->
-<div class="device-picker" id="devicePicker">
-  <button class="dp-btn" data-device="mobile" title="Mobile" aria-label="Mobile">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 18h.01"/>
-    </svg>
-  </button>
-  <button class="dp-btn" data-device="tablet" title="Tablet" aria-label="Tablet">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="4" y="2" width="16" height="20" rx="2.5"/><path d="M12 18h.01"/>
-    </svg>
-  </button>
-  <button class="dp-btn" data-device="laptop" title="Laptop" aria-label="Laptop">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/>
-    </svg>
-  </button>
-  <span class="dp-sep"></span>
-  <button class="dp-btn" data-device="desktop" title="Desktop" aria-label="Desktop">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-    </svg>
-  </button>
-</div>
+<!-- APP -->
+<div class="app-wrap relative z-10 max-w-[1500px] mx-auto p-3 sm:p-4 md:p-6 space-y-5" id="appWrap">
 
-<!-- DEVICE STAGE -->
-<div class="device-stage">
-  <div class="device-frame" id="deviceFrame" data-device="desktop">
-    <div class="device-notch"></div>
-    <div class="device-screen">
-      <div class="app-wrap" id="appWrap">
-        <div class="app-content relative z-10 max-w-[1500px] mx-auto p-4 md:p-6 space-y-5">
+  <header class="card rise flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 md:px-6">
+    <div class="flex items-center gap-3.5 min-w-0">
+      <div class="relative flex-shrink-0">
+        <div class="absolute inset-0 rounded-xl blur-lg opacity-50" style="background:var(--brand)"></div>
+        <div class="relative w-11 h-11 grid place-items-center">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-11 h-11">
+            <defs>
+              <linearGradient id="lgMainH" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="var(--brand)"/>
+                <stop offset="100%" stop-color="var(--brand-2)"/>
+              </linearGradient>
+              <linearGradient id="lgHiH" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(255,255,255,.45)"/>
+                <stop offset="65%" stop-color="rgba(255,255,255,0)"/>
+              </linearGradient>
+            </defs>
+            <path d="M32 6 L52 18 L52 46 L32 58 L12 46 L12 18 Z" fill="url(#lgMainH)"
+                  stroke="var(--brand-line)" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M32 10 L48 19.5 L48 44.5 L32 54 L16 44.5 L16 19.5 Z" fill="url(#lgHiH)" opacity=".75"/>
+            <path d="M26.5 25 L20.5 32 L26.5 39 M37.5 25 L43.5 32 L37.5 39"
+                  stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="32" cy="32" r="1.9" fill="white"/>
+          </svg>
+        </div>
+      </div>
+      <div class="min-w-0">
+        <h1 class="text-base sm:text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 flex-wrap" style="color:var(--text-head)">
+          Mini Compiler Studio
+          <span class="pill" style="background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand-line)">v2.9</span>
+        </h1>
+        <p class="text-[11px] mt-0.5 hidden sm:block" style="color:var(--text-dim)">Lexer · Parser · Semantic Analyzer · Three-Address Code</p>
+      </div>
+    </div>
 
-          <header class="card rise resp-header flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 md:px-6">
-            <div class="flex items-center gap-3.5">
-              <div class="relative">
-                <div class="absolute inset-0 rounded-xl bg-teal-500 blur-lg opacity-50"></div>
-                <div class="relative w-11 h-11 grid place-items-center">
-                  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-11 h-11">
-                    <defs>
-                      <linearGradient id="lgMainH" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stop-color="#2dd4bf"/><stop offset="100%" stop-color="#0891b2"/></linearGradient>
-                      <linearGradient id="lgHiH" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="rgba(255,255,255,.45)"/>
-                        <stop offset="65%" stop-color="rgba(255,255,255,0)"/></linearGradient>
-                    </defs>
-                    <path d="M32 6 L52 18 L52 46 L32 58 L12 46 L12 18 Z" fill="url(#lgMainH)"
-                          stroke="rgba(45,212,191,.55)" stroke-width="1.4" stroke-linejoin="round"/>
-                    <path d="M32 10 L48 19.5 L48 44.5 L32 54 L16 44.5 L16 19.5 Z" fill="url(#lgHiH)" opacity=".75"/>
-                    <path d="M26.5 25 L20.5 32 L26.5 39 M37.5 25 L43.5 32 L37.5 39"
-                          stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    <circle cx="32" cy="32" r="1.9" fill="white"/>
-                  </svg>
-                </div>
-              </div>
-              <div>
-                <h1 class="text-lg md:text-xl font-bold tracking-tight flex items-center gap-2" style="color:var(--text-head)">
-                  Mini Compiler Studio
-                  <span class="pill bg-teal-500/15 text-teal-300 border border-teal-500/30">v2.7</span>
-                </h1>
-                <p class="text-[11px] text-slate-400 mt-0.5 resp-hide-mobile">Lexer · Parser · Semantic Analyzer · Three-Address Code</p>
-              </div>
-            </div>
+    <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+      <span id="statusPill" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px]"
+            style="border:1px solid var(--line);background:var(--surface-3);color:var(--text-dim)">
+        <span id="statusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        <span id="statusText">Ready</span>
+      </span>
 
-            <div class="flex items-center gap-3 resp-header-actions">
-              <span id="statusPill" class="resp-status hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-700/60 bg-slate-800/40 text-[11px] text-slate-400">
-                <span id="statusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span id="statusText">Ready</span>
-              </span>
+      <button id="themeBtn" class="icon-btn" title="Toggle theme" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+      </button>
 
-              <button id="themeBtn" class="icon-btn" title="Toggle theme" onclick="toggleTheme()" aria-label="Toggle theme">
-                <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
-                  <circle cx="12" cy="12" r="4"/>
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-                </svg>
-              </button>
+      <button id="muteBtn" class="icon-btn" title="Toggle sound" onclick="toggleSound()">
+        <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+          <path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/>
+        </svg>
+      </button>
 
-              <button id="muteBtn" class="icon-btn" title="Toggle sound" onclick="toggleSound()">
-                <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
-                  <path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/>
-                </svg>
-              </button>
+      <button id="runBtn" onclick="runCompiler()"
+        class="btn-run px-4 sm:px-6 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 flex-1 sm:flex-initial justify-center">
+        <span id="runIcon"><svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M8 5v14l11-7z"/></svg></span>
+        <span id="runLabel">Run Compiler</span>
+      </button>
+    </div>
+  </header>
 
-              <button id="runBtn" onclick="runCompiler()"
-                class="btn-run px-6 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2">
-                <span id="runIcon"><svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M8 5v14l11-7z"/></svg></span>
-                <span id="runLabel">Run Compiler</span>
-              </button>
-            </div>
-          </header>
+  <main class="grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-5 items-start">
 
-          <main class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start resp-main">
-            <section class="xl:col-span-5 flex flex-col gap-5">
-              <div class="card tilt rise">
-                <div class="card-hd">
-                  <span class="card-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    Source Code
-                  </span>
-                  <span id="lineCount" class="text-[10px] mono text-slate-500">13 lines</span>
-                </div>
-                <div class="editor-wrap">
-                  <div id="gutter" class="mono select-none">1</div>
-                  <textarea id="editor" spellcheck="false" class="mono" placeholder="// Write your code here...">// ─────────────────────────────────────────
+    <section class="xl:col-span-5 flex flex-col gap-4 sm:gap-5">
+      <div class="card tilt rise">
+        <div class="card-hd">
+          <span class="card-title t-source">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Source Code
+          </span>
+          <span id="lineCount" class="text-[10px] mono" style="color:var(--text-mute)">13 lines</span>
+        </div>
+        <div class="editor-wrap">
+          <div id="gutter" aria-hidden="true">1</div>
+          <textarea id="editor" spellcheck="false" autocapitalize="off" autocorrect="off"
+                    autocomplete="off" inputmode="text" enterkeyhint="enter"
+                    placeholder="// Write your code here...">// ─────────────────────────────────────────
 //   Mini Compiler Studio — Playground
 // ─────────────────────────────────────────
 //
@@ -603,72 +626,68 @@
 //
 // ─────────────────────────────────────────
 </textarea>
-                </div>
-                <div class="border-t border-[var(--line)] px-3 py-2.5 flex flex-wrap items-center gap-2">
-                  <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" class="w-3 h-3"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Tokens <b id="statTokens">0</b></span>
-                  <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" class="w-3 h-3"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>Errors <b id="statErrors">0</b></span>
-                  <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" class="w-3 h-3"><path d="M4 7h16M4 12h16M4 17h10"/></svg>TAC <b id="statTac">0</b></span>
-                  <span class="stat ml-auto"><svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" class="w-3 h-3"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg><b id="statTime">—</b></span>
-                </div>
-              </div>
-
-              <div class="card tilt rise">
-                <div class="card-hd">
-                  <span class="card-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M4 17l6-6-6-6"/><path d="M12 19h8"/>
-                    </svg>
-                    Output
-                  </span>
-                  <span id="outputBadge" class="text-[10px] mono text-slate-500">stdout</span>
-                </div>
-                <div id="outputBox" class="output-body">
-                  <div class="text-slate-600 italic text-[11px]">Program output will appear here…</div>
-                </div>
-              </div>
-            </section>
-
-            <section class="xl:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-5 items-start resp-subgrid">
-              <div class="card tilt rise">
-                <div class="card-hd">
-                  <span class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3a1 1 0 0 1 0-1.4L15.4 2.6a1 1 0 0 1 1.4 0l4.3 4.3a1 1 0 0 1 0 1.4L8.4 21a1 1 0 0 1-1.4 0Z"/><path d="m14 7 3 3"/></svg>Lexical Tokens</span>
-                  <span id="tokenCount" class="text-[10px] mono text-slate-500">0</span>
-                </div>
-                <div id="tokensBox"></div>
-              </div>
-
-              <div class="card tilt rise">
-                <div class="card-hd">
-                  <span class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Semantic Analysis</span>
-                </div>
-                <div id="semanticBox" class="card-body flex items-center justify-center"></div>
-              </div>
-
-              <div class="card tilt rise">
-                <div class="card-hd">
-                  <span class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="17" width="6" height="5" rx="1"/><rect x="16" y="17" width="6" height="5" rx="1"/><path d="M12 7v4M5 17v-3h14v3"/></svg>Syntax Tree</span>
-                  <button onclick="copyBox('astBox')" class="text-slate-500 hover:text-teal-300 transition text-[10px] mono">copy</button>
-                </div>
-                <pre id="astBox" class="mono card-body text-[11px] leading-relaxed whitespace-pre" style="color:var(--text-code)"></pre>
-              </div>
-
-              <div class="card tilt rise">
-                <div class="card-hd">
-                  <span class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>Three Address Code</span>
-                  <button onclick="copyBox('tacBox')" class="text-slate-500 hover:text-cyan-300 transition text-[10px] mono">copy</button>
-                </div>
-                <pre id="tacBox" class="mono card-body text-[11px] leading-relaxed whitespace-pre" style="color:var(--text-code)"></pre>
-              </div>
-            </section>
-          </main>
-
-          <p class="text-center text-[10px] text-slate-600 pb-2">
-            Mini Compiler Studio · <span class="mono">Ctrl</span> + <span class="mono">Enter</span> to compile
-          </p>
+        </div>
+        <div class="border-t px-3 py-2.5 flex flex-wrap items-center gap-2" style="border-color:var(--line)">
+          <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2" class="w-3 h-3"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Tokens <b id="statTokens">0</b></span>
+          <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" class="w-3 h-3"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>Errors <b id="statErrors">0</b></span>
+          <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-2)" stroke-width="2" class="w-3 h-3"><path d="M4 7h16M4 12h16M4 17h10"/></svg>TAC <b id="statTac">0</b></span>
+          <span class="stat ml-auto"><svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" class="w-3 h-3"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg><b id="statTime">—</b></span>
         </div>
       </div>
-    </div>
-  </div>
+
+      <div class="card tilt rise">
+        <div class="card-hd">
+          <span class="card-title t-output">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 17l6-6-6-6"/><path d="M12 19h8"/>
+            </svg>
+            Output
+          </span>
+          <span id="outputBadge" class="text-[10px] mono" style="color:var(--text-mute)">stdout</span>
+        </div>
+        <div id="outputBox" class="output-body">
+          <div class="italic text-[11px]" style="color:var(--text-mute)">Program output will appear here…</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="xl:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 items-start">
+      <div class="card tilt rise">
+        <div class="card-hd">
+          <span class="card-title t-tokens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3a1 1 0 0 1 0-1.4L15.4 2.6a1 1 0 0 1 1.4 0l4.3 4.3a1 1 0 0 1 0 1.4L8.4 21a1 1 0 0 1-1.4 0Z"/><path d="m14 7 3 3"/></svg>Lexical Tokens</span>
+          <span id="tokenCount" class="text-[10px] mono" style="color:var(--text-mute)">0</span>
+        </div>
+        <div id="tokensBox"></div>
+      </div>
+
+      <div class="card tilt rise">
+        <div class="card-hd">
+          <span class="card-title t-semantic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Semantic Analysis</span>
+        </div>
+        <div id="semanticBox" class="card-body flex items-center justify-center"></div>
+      </div>
+
+      <div class="card tilt rise">
+        <div class="card-hd">
+          <span class="card-title t-ast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="17" width="6" height="5" rx="1"/><rect x="16" y="17" width="6" height="5" rx="1"/><path d="M12 7v4M5 17v-3h14v3"/></svg>Syntax Tree</span>
+          <button onclick="copyBox('astBox')" class="transition text-[10px] mono" style="color:var(--text-mute)" onmouseover="this.style.color='var(--brand)'" onmouseout="this.style.color='var(--text-mute)'">copy</button>
+        </div>
+        <pre id="astBox" class="mono card-body text-[11px] leading-relaxed whitespace-pre" style="color:var(--text-code)"></pre>
+      </div>
+
+      <div class="card tilt rise">
+        <div class="card-hd">
+          <span class="card-title t-tac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>Three Address Code</span>
+          <button onclick="copyBox('tacBox')" class="transition text-[10px] mono" style="color:var(--text-mute)" onmouseover="this.style.color='var(--brand)'" onmouseout="this.style.color='var(--text-mute)'">copy</button>
+        </div>
+        <pre id="tacBox" class="mono card-body text-[11px] leading-relaxed whitespace-pre" style="color:var(--text-code)"></pre>
+      </div>
+    </section>
+  </main>
+
+  <p class="text-center text-[10px] pb-2" style="color:var(--text-mute)">
+    Mini Compiler Studio · <span class="mono">Ctrl</span> + <span class="mono">Enter</span> to compile
+  </p>
 </div>
 
 <!-- SOCIAL DOCK -->
@@ -705,7 +724,7 @@
           <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>
         </svg>
         <span>Compilation Errors</span>
-        <span id="modalCount" class="pill bg-red-500/20 text-red-300 border border-red-500/40">0</span>
+        <span id="modalCount" class="pill" style="background:rgba(248,113,113,.2);color:#fca5a5;border:1px solid rgba(248,113,113,.4)">0</span>
       </div>
       <button class="modal-close" onclick="closeErrorModal()" aria-label="Close">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -715,78 +734,12 @@
   </div>
 </div>
 
-<div id="toast" class="fixed bottom-6 right-6 z-[300] hidden max-w-xs px-4 py-3 rounded-xl border border-red-500/40 bg-red-950/90 backdrop-blur text-red-200 text-xs shadow-2xl"></div>
+<div id="toast" class="toast hidden"></div>
 
 <script>
 'use strict';
 
-/* ═══════════════════════════════════════════
-   DEVICE SIMULATOR
-   ═══════════════════════════════════════════ */
-const DEVICES = ['mobile','tablet','laptop','desktop'];
-
-function detectDevice(){
-  const w  = window.innerWidth;
-  const ua = navigator.userAgent.toLowerCase();
-  const isIPad   = /ipad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const isTablet = /tablet|ipad|playbook|silk/.test(ua) || isIPad;
-  const isMobile = /mobile|iphone|ipod|android.*mobile|windows phone|blackberry/.test(ua);
-
-  if (isTablet) return 'tablet';
-  if (isMobile) return 'mobile';
-  if (w >= 1200) return 'desktop';
-  if (w >= 900)  return 'laptop';
-  if (w >= 640)  return 'tablet';
-  return 'mobile';
-}
-
-function applyDevice(device, save){
-  if (!DEVICES.includes(device)) device = 'desktop';
-  const frame  = document.getElementById('deviceFrame');
-  const picker = document.getElementById('devicePicker');
-  frame.setAttribute('data-device', device);
-  // Update picker active state
-  picker.querySelectorAll('.dp-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.device === device);
-  });
-  // Save choice
-  if (save){
-    try { localStorage.setItem('mcs-device', device); } catch(_) {}
-  }
-}
-
-/* Init: saved choice OR auto-detect */
-(function initDevice(){
-  let saved = null;
-  try { saved = localStorage.getItem('mcs-device'); } catch(_) {}
-  const device = saved || detectDevice();
-  // Delay so the DOM is ready
-  requestAnimationFrame(() => applyDevice(device, !saved));
-
-  // Wire up picker
-  document.getElementById('devicePicker').addEventListener('click', e => {
-    const btn = e.target.closest('.dp-btn');
-    if (!btn) return;
-    applyDevice(btn.dataset.device, true);
-    if (typeof sfxClick === 'function') sfxClick();
-    if (typeof toast === 'function') toast('Viewing as ' + btn.dataset.device, true);
-  });
-
-  // Re-detect on window resize (only if user hasn't chosen manually)
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      let hasManual = false;
-      try { hasManual = !!localStorage.getItem('mcs-device'); } catch(_) {}
-      if (!hasManual) applyDevice(detectDevice(), false);
-    }, 200);
-  });
-})();
-
-/* ═══════════════════════════════════════════
-   THEME
-   ═══════════════════════════════════════════ */
+/* ═══════════ THEME ═══════════ */
 const THEME_ICONS = {
   dark: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
   light: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
@@ -799,9 +752,10 @@ function applyTheme(theme){
 }
 function toggleTheme(){
   const cur = document.documentElement.getAttribute('data-theme') || 'dark';
-  applyTheme(cur === 'dark' ? 'light' : 'dark');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
   if (typeof sfxClick === 'function') sfxClick();
-  if (typeof toast === 'function') toast('Switched to ' + (cur === 'dark' ? 'light' : 'dark') + ' mode', true);
+  if (typeof toast === 'function') toast(next === 'light' ? '☀️ Coffee mode on' : '🌙 Night mode on', true);
 }
 (function initThemeIcon(){
   const t = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -809,9 +763,7 @@ function toggleTheme(){
   if (icon) icon.innerHTML = THEME_ICONS[t] || THEME_ICONS.dark;
 })();
 
-/* ═══════════════════════════════════════════
-   AUDIO
-   ═══════════════════════════════════════════ */
+/* ═══════════ AUDIO ═══════════ */
 let audioCtx = null, soundOn = true, welcomePlayed = false;
 function initAudio(){
   if (audioCtx){
@@ -841,15 +793,13 @@ function playWelcomeChime(){
   master.gain.setValueAtTime(0.16, now + 2.0);
   master.gain.exponentialRampToValueAtTime(0.0001, now + 4.0);
   master.connect(audioCtx.destination);
-
   [130.81, 196.00].forEach((f,i)=>{
     const o = audioCtx.createOscillator(), g = audioCtx.createGain();
     o.type='triangle'; o.frequency.value=f;
     g.gain.setValueAtTime(0.0001,now);
     g.gain.exponentialRampToValueAtTime(0.055-i*0.01,now+0.8);
     g.gain.exponentialRampToValueAtTime(0.0001,now+3.8);
-    o.connect(g).connect(master);
-    o.start(now); o.stop(now+4.0);
+    o.connect(g).connect(master); o.start(now); o.stop(now+4.0);
   });
   [{f:523.25,t:0},{f:659.25,t:0.18},{f:783.99,t:0.36},{f:1046.5,t:0.56}].forEach(({f,t})=>{
     const o = audioCtx.createOscillator(), g = audioCtx.createGain();
@@ -857,8 +807,7 @@ function playWelcomeChime(){
     g.gain.setValueAtTime(0.0001,now+t);
     g.gain.exponentialRampToValueAtTime(0.16,now+t+0.02);
     g.gain.exponentialRampToValueAtTime(0.0001,now+t+1.8);
-    o.connect(g).connect(master);
-    o.start(now+t); o.stop(now+t+1.9);
+    o.connect(g).connect(master); o.start(now+t); o.stop(now+t+1.9);
   });
   const s1 = audioCtx.createOscillator(), g1 = audioCtx.createGain();
   s1.type='sine'; s1.frequency.value=1318.51;
@@ -866,13 +815,6 @@ function playWelcomeChime(){
   g1.gain.exponentialRampToValueAtTime(0.09,now+0.85);
   g1.gain.exponentialRampToValueAtTime(0.0001,now+2.6);
   s1.connect(g1).connect(master); s1.start(now+0.75); s1.stop(now+2.7);
-
-  const s2 = audioCtx.createOscillator(), g2 = audioCtx.createGain();
-  s2.type='sine'; s2.frequency.value=1567.98;
-  g2.gain.setValueAtTime(0.0001,now+0.95);
-  g2.gain.exponentialRampToValueAtTime(0.05,now+1.05);
-  g2.gain.exponentialRampToValueAtTime(0.0001,now+2.4);
-  s2.connect(g2).connect(master); s2.start(now+0.95); s2.stop(now+2.5);
 }
 (function tryAutoplay(){
   initAudio();
@@ -921,9 +863,7 @@ function toggleSound(){
   if (soundOn) sfxClick();
 }
 
-/* ═══════════════════════════════════════════
-   SPLASH
-   ═══════════════════════════════════════════ */
+/* ═══════════ SPLASH ═══════════ */
 (function(){
   const titleEl = document.getElementById('splashTitle');
   const text = 'Mini Compiler';
@@ -936,11 +876,9 @@ function toggleSound(){
     titleEl.appendChild(s);
     delay += 55;
   }
-
   document.body.style.overflow = 'hidden';
   const splash  = document.getElementById('splash');
   const appWrap = document.getElementById('appWrap');
-
   setTimeout(() => {
     sfxWhoosh();
     splash.classList.add('exit');
@@ -950,9 +888,7 @@ function toggleSound(){
   }, 2600);
 })();
 
-/* ═══════════════════════════════════════════
-   LIVE BG + RIPPLE
-   ═══════════════════════════════════════════ */
+/* ═══════════ LIVE BG + RIPPLE ═══════════ */
 const auroraInner = document.getElementById('auroraInner');
 let rafId = 0;
 document.addEventListener('mousemove', e => {
@@ -972,9 +908,7 @@ document.addEventListener('click', e => {
   setTimeout(() => r.remove(), 900);
 });
 
-/* ═══════════════════════════════════════════
-   HELPERS
-   ═══════════════════════════════════════════ */
+/* ═══════════ HELPERS ═══════════ */
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => (
   {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
@@ -984,9 +918,7 @@ const EMPTY = txt => `<div class="m-auto flex flex-col items-center gap-2" style
     <circle cx="12" cy="12" r="9"/><path d="M9 12h6"/></svg>
   <span class="text-[11px] italic">${txt}</span></div>`;
 
-/* ═══════════════════════════════════════════
-   EDITOR
-   ═══════════════════════════════════════════ */
+/* ═══════════ EDITOR + GUTTER ═══════════ */
 const editor = $('#editor');
 const gutter = $('#gutter');
 const lineCountEl = $('#lineCount');
@@ -1021,31 +953,27 @@ document.addEventListener('keydown', e => {
 syncGutter();
 autoResizeEditor();
 
-/* ═══════════════════════════════════════════
-   TOKEN CLASSES + JSON COLOR
-   ═══════════════════════════════════════════ */
+/* ═══════════ TOKEN CLASSES ═══════════ */
 function tokenClass(type){
   const k = (type || '').toUpperCase();
-  if (k.includes('KEY'))                              return 'text-teal-300 border-teal-500/30 bg-teal-500/10';
-  if (k.includes('ID'))                               return 'text-emerald-300 border-emerald-500/30 bg-emerald-500/10';
-  if (k.includes('NUM')||k.includes('INT')||k.includes('FLOAT')) return 'text-amber-300 border-amber-500/30 bg-amber-500/10';
-  if (k.includes('STR'))                              return 'text-pink-300 border-pink-500/30 bg-pink-500/10';
-  if (k.includes('OP'))                               return 'text-cyan-300 border-cyan-500/30 bg-cyan-500/10';
-  if (k.includes('PUNC')||k.includes('SEP'))          return 'text-slate-300 border-slate-600/40 bg-slate-500/10';
-  if (k.includes('EOF'))                              return 'text-slate-500 border-slate-700/40 bg-slate-800/30';
-  return 'text-slate-300 border-slate-600/40 bg-slate-500/10';
+  if (k.includes('KEY'))                              return 'tk-key';
+  if (k.includes('ID'))                               return 'tk-id';
+  if (k.includes('NUM')||k.includes('INT')||k.includes('FLOAT')) return 'tk-num';
+  if (k.includes('STR'))                              return 'tk-str';
+  if (k.includes('OP'))                               return 'tk-op';
+  if (k.includes('PUNC')||k.includes('SEP'))          return 'tk-punc';
+  if (k.includes('EOF'))                              return 'tk-eof';
+  return 'tk-other';
 }
 function colorJSON(str){
   return esc(str)
-    .replace(/&quot;([^&]*?)&quot;(\s*:)/g, '<span style="color:#0ea5e9">&quot;$1&quot;</span>$2')
-    .replace(/:\s*&quot;([^&]*?)&quot;/g,   ': <span style="color:#059669">&quot;$1&quot;</span>')
-    .replace(/:\s*(-?\d+\.?\d*)/g,          ': <span style="color:#d97706">$1</span>')
-    .replace(/\b(true|false|null)\b/g,      '<span style="color:#7c3aed">$1</span>');
+    .replace(/&quot;([^&]*?)&quot;(\s*:)/g, '<span class="cj-key">&quot;$1&quot;</span>$2')
+    .replace(/:\s*&quot;([^&]*?)&quot;/g,   ': <span class="cj-str">&quot;$1&quot;</span>')
+    .replace(/:\s*(-?\d+\.?\d*)/g,          ': <span class="cj-num">$1</span>')
+    .replace(/\b(true|false|null)\b/g,      '<span class="cj-bool">$1</span>');
 }
 
-/* ═══════════════════════════════════════════
-   COPY / TOAST / STATUS
-   ═══════════════════════════════════════════ */
+/* ═══════════ COPY / TOAST / STATUS ═══════════ */
 function copyBox(id){
   navigator.clipboard.writeText($('#'+id).innerText)
     .then(()=>toast('Copied ✓', true))
@@ -1055,10 +983,7 @@ let toastTimer = 0;
 function toast(msg, ok){
   const t = $('#toast');
   t.textContent = msg;
-  t.className = 'fixed bottom-6 right-6 z-[300] max-w-xs px-4 py-3 rounded-xl border backdrop-blur text-xs shadow-2xl ' +
-    (ok ? 'border-emerald-500/40 bg-emerald-950/90 text-emerald-200'
-        : 'border-red-500/40 bg-red-950/90 text-red-200');
-  t.classList.remove('hidden');
+  t.className = 'toast ' + (ok ? 'ok' : 'err');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=>t.classList.add('hidden'), 2600);
 }
@@ -1067,9 +992,7 @@ function setStatus(text, color){
   $('#statusDot').className = 'w-1.5 h-1.5 rounded-full ' + color;
 }
 
-/* ═══════════════════════════════════════════
-   ERROR MODAL
-   ═══════════════════════════════════════════ */
+/* ═══════════ ERROR MODAL ═══════════ */
 function detectStage(err){
   if (err && typeof err === 'object' && err.stage) return err.stage;
   const s = String(err && typeof err === 'object' ? err.message : err).toLowerCase();
@@ -1103,9 +1026,7 @@ function closeErrorModal(){
   sfxClick();
 }
 
-/* ═══════════════════════════════════════════
-   RUN COMPILER
-   ═══════════════════════════════════════════ */
+/* ═══════════ RUN COMPILER ═══════════ */
 async function runCompiler(){
   const btn  = $('#runBtn');
   const code = editor.value.trim();
@@ -1142,24 +1063,24 @@ async function runCompiler(){
     const errors = data.errors || [];
     $('#statErrors').textContent = errors.length;
     $('#semanticBox').innerHTML = errors.length
-      ? `<div class="w-full fade-in rounded-xl border border-red-500/30 bg-red-500/[.07] p-4">
+      ? `<div class="w-full fade-in rounded-xl border p-4" style="border-color:rgba(248,113,113,.3);background:rgba(239,68,68,.06)">
            <div class="flex items-center gap-2 mb-3">
-             <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-             <span class="text-[11px] font-semibold uppercase tracking-wider text-red-300">
+             <span class="w-2 h-2 rounded-full animate-pulse" style="background:#ef4444"></span>
+             <span class="text-[11px] font-semibold uppercase tracking-wider" style="color:#f87171">
                ${errors.length} Error${errors.length>1?'s':''} Detected
              </span>
            </div>
-           <button onclick="openErrorModal(window.__lastErrors)" class="text-[11px] text-red-300 hover:text-red-100 underline underline-offset-2">
+           <button onclick="openErrorModal(window.__lastErrors)" class="text-[11px] underline underline-offset-2" style="color:#f87171">
              View full details →
            </button>
          </div>`
-      : `<div class="w-full fade-in rounded-xl border border-emerald-500/30 bg-emerald-500/[.07] p-4 text-center">
-           <div class="mx-auto w-9 h-9 rounded-full bg-emerald-500/15 grid place-items-center mb-2">
+      : `<div class="w-full fade-in rounded-xl border p-4 text-center" style="border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.06)">
+           <div class="mx-auto w-9 h-9 rounded-full grid place-items-center mb-2" style="background:rgba(16,185,129,.15)">
              <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
                <polyline points="20 6 9 17 4 12"/></svg>
            </div>
-           <p class="text-emerald-300 font-semibold text-xs">No Errors Found</p>
-           <p class="text-emerald-500/70 text-[10px] mt-1">Code passed semantic analysis</p>
+           <p class="font-semibold text-xs" style="color:#34d399">No Errors Found</p>
+           <p class="text-[10px] mt-1" style="color:rgba(52,211,153,.7)">Code passed semantic analysis</p>
          </div>`;
     window.__lastErrors = errors;
 
@@ -1167,33 +1088,33 @@ async function runCompiler(){
     const outputBadge = $('#outputBadge');
     if (errors.length){
       outputBadge.textContent = 'blocked';
-      outputBadge.className = 'text-[10px] mono text-red-400';
-      $('#outputBox').innerHTML = `<div class="text-red-400 italic text-[11px]">Program output blocked — fix errors first.</div>`;
+      outputBadge.style.color = '#ef4444';
+      $('#outputBox').innerHTML = `<div class="italic text-[11px]" style="color:#ef4444">Program output blocked — fix errors first.</div>`;
     } else if (output){
       const lines = Array.isArray(output) ? output : String(output).split('\n');
       outputBadge.textContent = 'stdout';
-      outputBadge.className = 'text-[10px] mono text-emerald-400';
+      outputBadge.style.color = 'var(--brand)';
       $('#outputBox').innerHTML = lines.map((line,i)=>
         `<div class="out-line" style="animation-delay:${Math.min(i*50,500)}ms">
            <span class="arrow">›</span><span class="txt">${esc(line)}</span></div>`).join('');
     } else {
       outputBadge.textContent = 'stdout';
-      outputBadge.className = 'text-[10px] mono text-slate-500';
-      $('#outputBox').innerHTML = `<div class="text-slate-600 italic text-[11px]">No output produced.</div>`;
+      outputBadge.style.color = 'var(--text-mute)';
+      $('#outputBox').innerHTML = `<div class="italic text-[11px]" style="color:var(--text-mute)">No output produced.</div>`;
     }
 
     const ast = data.syntax_tree;
     $('#astBox').innerHTML = (ast && Object.keys(ast).length)
       ? colorJSON(JSON.stringify(ast, null, 2))
-      : '<span class="text-slate-600 italic">No syntax tree generated</span>';
+      : '<span class="italic" style="color:var(--text-mute)">No syntax tree generated</span>';
 
     const tac = data.tac || [];
     $('#statTac').textContent = tac.length;
     $('#tacBox').innerHTML = tac.length
       ? tac.map((line,i)=>`<div class="fade-in flex gap-3" style="animation-delay:${Math.min(i*30,400)}ms">
-             <span class="text-slate-600 select-none w-5 text-right shrink-0">${i+1}</span>
+             <span class="select-none w-5 text-right shrink-0" style="color:var(--text-mute)">${i+1}</span>
              <span>${esc(line)}</span></div>`).join('')
-      : '<span class="text-slate-600 italic">// No TAC generated</span>';
+      : '<span class="italic" style="color:var(--text-mute)">// No TAC generated</span>';
 
     $('#statTime').textContent = elapsed + ' ms';
 
@@ -1210,7 +1131,7 @@ async function runCompiler(){
     sfxError();
     $('#tokensBox').innerHTML   = EMPTY('Request failed');
     $('#semanticBox').innerHTML = EMPTY('Request failed');
-    $('#outputBox').innerHTML   = '<div class="text-red-400 italic text-[11px]">Request failed.</div>';
+    $('#outputBox').innerHTML   = '<div class="italic text-[11px]" style="color:#ef4444">Request failed.</div>';
     $('#astBox').textContent    = '—';
     $('#tacBox').textContent    = '—';
   } finally {
@@ -1223,8 +1144,8 @@ async function runCompiler(){
 /* Init empties */
 $('#tokensBox').innerHTML   = EMPTY('Run the compiler to see tokens');
 $('#semanticBox').innerHTML = EMPTY('Awaiting analysis');
-$('#astBox').innerHTML      = '<span class="text-slate-600 italic">AST will appear here…</span>';
-$('#tacBox').innerHTML      = '<span class="text-slate-600 italic">TAC instructions will appear here…</span>';
+$('#astBox').innerHTML      = '<span class="italic" style="color:var(--text-mute)">AST will appear here…</span>';
+$('#tacBox').innerHTML      = '<span class="italic" style="color:var(--text-mute)">TAC instructions will appear here…</span>';
 
 /* 3D tilt */
 if (window.matchMedia('(hover:hover) and (pointer:fine)').matches){
