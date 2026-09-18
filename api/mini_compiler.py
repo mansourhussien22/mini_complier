@@ -1,5 +1,3 @@
-# mini_compiler.py - Python Syntax Edition
-
 KEYWORDS = {"print"}
 OPERATORS = {"+", "-", "*", "/", "="}
 SYMBOLS = {"(", ")", ";"}
@@ -24,12 +22,26 @@ def lexer(source_code):
     while i < len(source_code):
         char = source_code[i]
 
-        # تجاهل المسافات والأسطر الفارغة
         if char.isspace():
             i += 1
             continue
 
-        # دعم علامات التنصيص (Strings)
+        # تجاهل التعليقات (#)
+        if char == "#":
+            while i < len(source_code) and source_code[i] != "\n":
+                i += 1
+            continue
+
+        # تجاهل الـ Docstrings
+        if source_code[i:i+3] in ('"""', "'''"):
+            quote = source_code[i:i+3]
+            i += 3
+            while i < len(source_code) and source_code[i:i+3] != quote:
+                i += 1
+            i += 3
+            continue
+
+        # النصوص (Strings)
         if char in ('"', "'"):
             quote = char
             i += 1
@@ -39,11 +51,11 @@ def lexer(source_code):
                 i += 1
             if i >= len(source_code):
                 raise Exception("Unterminated string literal")
-            i += 1  # تخطي علامة الإغلاق
+            i += 1
             tokens.append(Token("STRING", string_val))
             continue
 
-        # دعم الكلمات والـ Identifiers مع الشرطة السفلية _
+        # المعرفات والكلمات المفتاحية
         if char.isalpha() or char == "_":
             word = ""
             while i < len(source_code) and (source_code[i].isalnum() or source_code[i] == "_"):
@@ -56,7 +68,7 @@ def lexer(source_code):
                 tokens.append(Token("IDENTIFIER", word))
             continue
 
-        # دعم الأرقام
+        # الأرقام
         if char.isdigit():
             number = ""
             while i < len(source_code) and source_code[i].isdigit():
@@ -71,7 +83,7 @@ def lexer(source_code):
             i += 1
             continue
 
-        # الرموز (الأقواس، الفاصلة المنقوطة إن وجدت)
+        # الرموز
         if char in SYMBOLS:
             tokens.append(Token("SYMBOL", char))
             i += 1
@@ -111,7 +123,6 @@ class Parser:
         statements = []
         while self.current_token() is not None:
             statements.append(self.parse_statement())
-            # الفاصلة المنقوطة اختيارية: إن وجدت نتخطاها
             if self.current_token() and self.current_token().type == "SYMBOL" and self.current_token().value == ";":
                 self.match("SYMBOL", ";")
         return statements
@@ -119,11 +130,9 @@ class Parser:
     def parse_statement(self):
         token = self.current_token()
 
-        # أمر طباعة بايثون: print(...)
         if token.type == "KEYWORD" and token.value == "print":
             return self.parse_print()
 
-        # إسناد بايثون المباشر: x = 5 أو my_name = "mansour"
         if token.type == "IDENTIFIER":
             return self.parse_assignment()
 
@@ -143,7 +152,6 @@ class Parser:
         self.match("KEYWORD", "print")
         self.match("SYMBOL", "(")
         
-        # print تقبل متغير أو نص أو رقم
         arg_token = self.current_token()
         if arg_token.type in ("IDENTIFIER", "STRING", "NUMBER"):
             self.pos += 1
@@ -210,7 +218,6 @@ def semantic_analysis(ast):
     for statement in ast:
         if statement["type"] == "declaration":
             check_expression(statement["expression"])
-            # بايثون تقبل إعادة تعريف المتغير بنفس الاسم
             declared_variables.add(statement["name"])
 
         elif statement["type"] == "print":
@@ -222,7 +229,7 @@ def semantic_analysis(ast):
 
 
 # -----------------------------
-# 4. Intermediate Code Generation
+# 4. Three Address Code (TAC)
 # -----------------------------
 class CodeGenerator:
     def __init__(self):
@@ -258,3 +265,62 @@ class CodeGenerator:
                 self.code.append(f"print {val}")
 
         return self.code
+
+
+# -----------------------------
+# 5. Virtual Machine / Execution (Output Generator)
+# -----------------------------
+class TACInterpreter:
+    def __init__(self, tac_instructions):
+        self.tac = tac_instructions
+        self.env = {}
+        self.stdout = []
+
+    def run(self):
+        for line in self.tac:
+            line = line.strip()
+            if not line:
+                continue
+
+            # أوامر الطباعة: print x
+            if line.startswith("print "):
+                target = line.replace("print ", "").strip()
+                val = self._resolve_val(target)
+                self.stdout.append(str(val))
+
+            # أوامر الإسناد والحساب: var = a + b أو var = val
+            elif "=" in line:
+                left, right = [part.strip() for part in line.split("=", 1)]
+                parts = right.split()
+
+                if len(parts) == 1:
+                    self.env[left] = self._resolve_val(parts[0])
+                elif len(parts) == 3:
+                    op1 = self._resolve_val(parts[0])
+                    op = parts[1]
+                    op2 = self._resolve_val(parts[2])
+                    self.env[left] = self._eval_op(op1, op, op2)
+
+        return self.stdout
+
+    def _resolve_val(self, token):
+        # نصوص
+        if (token.startswith('"') and token.endswith('"')) or (token.startswith("'") and token.endswith("'")):
+            return token[1:-1]
+        # أرقام
+        if token.isdigit():
+            return int(token)
+        # متغيرات سابقة في الذاكرة
+        if token in self.env:
+            return self.env[token]
+        return token
+
+    def _eval_op(self, left, op, right):
+        try:
+            if op == "+": return left + right
+            if op == "-": return left - right
+            if op == "*": return left * right
+            if op == "/": return left // right if isinstance(left, int) and isinstance(right, int) else left / right
+        except Exception:
+            return 0
+        return 0
