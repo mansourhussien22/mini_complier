@@ -476,7 +476,7 @@
     text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:4px}
 
   /* ═══════════════════════════════════════════════════════════
-     SOCIAL LINKS — bottom of page, in normal flow
+     SOCIAL LINKS — bottom of page
      ═══════════════════════════════════════════════════════════ */
   .social-links{
     display:flex;
@@ -659,7 +659,7 @@
       <div class="min-w-0">
         <h1 class="text-base sm:text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 flex-wrap" style="color:var(--text-head)">
           Mini Compiler Studio
-          <span class="pill">v3.4</span>
+          <span class="pill">v3.5</span>
         </h1>
         <p class="text-[11px] mt-0.5 hidden sm:block" style="color:var(--text-dim)">Lexer · Parser · Semantic Analyzer · Three-Address Code</p>
       </div>
@@ -782,12 +782,9 @@
     </section>
   </main>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       FOOTER — Social links at bottom of page
-       ═══════════════════════════════════════════════════════════ -->
+  <!-- FOOTER — Social links -->
   <footer class="pt-6 pb-8 space-y-5">
     <div class="social-links">
-      <!-- EMAIL -->
       <a href="https://mail.google.com/mail/?view=cm&fs=1&to=mansourhussuen9990@gmail.com"
          target="_blank" rel="noopener"
          class="social-link" style="--dock-brand:#f97316"
@@ -798,7 +795,6 @@
         <span>Email</span>
       </a>
 
-      <!-- LINKEDIN -->
       <a href="https://www.linkedin.com/in/mansour-hussien-83b72b306/"
          target="_blank" rel="noopener"
          class="social-link" style="--dock-brand:#0a66c2"
@@ -809,7 +805,6 @@
         <span>LinkedIn</span>
       </a>
 
-      <!-- GITHUB -->
       <a href="https://github.com/mansourhussien22"
          target="_blank" rel="noopener"
          class="social-link" style="--dock-brand:#24292f"
@@ -822,7 +817,7 @@
     </div>
 
     <p class="text-center text-[10px]" style="color:var(--text-mute)">
-      Mini Compiler Studio · <span class="mono">Ctrl</span> + <span class="mono">Enter</span> to compile
+      Mini Compiler Studio · <span class="mono">Ctrl</span> + <span class="mono">Enter</span> · <span class="mono">Ctrl</span> + <span class="mono">F5</span> to compile
     </p>
   </footer>
 </div>
@@ -1083,9 +1078,36 @@ editor.addEventListener('keydown', e => {
     syncGutter(); autoResizeEditor();
   }
 });
+
+/* ═══════════ KEYBOARD SHORTCUTS ═══════════
+   - Ctrl+Enter  → Run
+   - Ctrl+F5     → Run (instead of hard refresh)
+   - Ctrl+B      → Run (backup shortcut)
+   ═══════════════════════════════════════════ */
 document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); runCompiler(); }
-});
+  // Ctrl/Cmd + Enter
+  if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'Enter'){
+    e.preventDefault();
+    e.stopPropagation();
+    runCompiler();
+    return;
+  }
+  // Ctrl/Cmd + F5
+  if ((e.ctrlKey || e.metaKey) && e.key === 'F5'){
+    e.preventDefault();
+    e.stopPropagation();
+    runCompiler();
+    return;
+  }
+  // Ctrl/Cmd + B (backup)
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')){
+    e.preventDefault();
+    e.stopPropagation();
+    runCompiler();
+    return;
+  }
+}, true);
+
 syncGutter();
 autoResizeEditor();
 
