@@ -107,10 +107,8 @@
   /* ═══════════════════════════════════════════════════════════
      ☀️ LIGHT MODE — "Sunrise Studio"
      Warm pastel · rose · lavender · fuchsia · amber
-     Completely independent identity
      ═══════════════════════════════════════════════════════════ */
   [data-theme="light"]{
-    /* NOT white — soft lavender-rose */
     --bg:#fdf4ff;
     --bg-radial:#fff1f2;
     --card-a:rgba(255,250,252,.82);
@@ -140,18 +138,16 @@
 
     --grid-color:rgba(217,70,239,.09);
 
-    /* Blobs — light — VIVID pastel */
-    --l-blob-1:#f0abfc;   /* fuchsia-300 */
-    --l-blob-2:#fda4af;   /* rose-300 */
-    --l-blob-3:#86efac;   /* mint-300 */
-    --l-blob-4:#fcd34d;   /* amber-300 */
+    /* Blobs — light */
+    --l-blob-1:#f0abfc;
+    --l-blob-2:#fda4af;
+    --l-blob-3:#86efac;
+    --l-blob-4:#fcd34d;
     --l-blob-opacity:.65;
 
-    /* Logo gradient for light */
     --logo-1:#d946ef;
     --logo-2:#f97316;
 
-    /* Token colors — warm pastel */
     --tk-key:#be185d;    --tk-key-bg:rgba(219,39,119,.1);   --tk-key-bd:rgba(219,39,119,.3);
     --tk-id:#6d28d9;     --tk-id-bg:rgba(124,58,237,.1);    --tk-id-bd:rgba(124,58,237,.3);
     --tk-num:#c2410c;    --tk-num-bg:rgba(234,88,12,.1);    --tk-num-bd:rgba(234,88,12,.3);
@@ -161,7 +157,6 @@
     --tk-eof:#a8a29e;    --tk-eof-bg:rgba(168,162,158,.08); --tk-eof-bd:rgba(168,162,158,.22);
     --tk-other:#57534e;  --tk-other-bg:rgba(87,83,78,.08);  --tk-other-bd:rgba(87,83,78,.22);
 
-    /* JSON colors */
     --cj-key:#7c3aed;
     --cj-str:#be185d;
     --cj-num:#c2410c;
@@ -195,7 +190,6 @@
     overflow-x:hidden;transition:background .6s ease,color .4s ease;
     -webkit-text-size-adjust:100%;text-size-adjust:100%}
 
-  /* Light mode body gradient */
   [data-theme="light"] body{
     background:
       radial-gradient(ellipse at top left, #fce7f3 0%, transparent 45%),
@@ -217,7 +211,7 @@
   [data-theme="light"] .bg-slate-800\/60{background:var(--surface-4)!important}
   [data-theme="light"] .border-slate-700\/60{border-color:var(--line)!important}
 
-  /* ═══════════ SPLASH ═══════════ */
+  /* SPLASH */
   .splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
     background:radial-gradient(ellipse at center,var(--bg-radial) 0%,var(--bg) 75%);
     transition:opacity .8s cubic-bezier(.4,0,.2,1),transform .8s cubic-bezier(.4,0,.2,1),background .5s ease}
@@ -227,12 +221,10 @@
   .splash-blob{position:absolute;border-radius:50%;filter:blur(90px);
     animation:float 14s ease-in-out infinite;transition:opacity .5s ease,background .5s ease}
 
-  /* Dark splash blobs */
   .splash-blob.sb-1{background:var(--d-blob-1);opacity:.35;width:380px;height:380px;top:-120px;left:-100px}
   .splash-blob.sb-2{background:var(--d-blob-2);opacity:.35;width:340px;height:340px;bottom:-140px;right:-80px;animation-delay:-6s}
   .splash-blob.sb-3{background:var(--d-blob-3);opacity:.35;width:260px;height:260px;top:35%;left:48%;animation-delay:-11s}
 
-  /* Light splash blobs — DIFFERENT positions AND colors */
   [data-theme="light"] .splash-blob.sb-1{background:var(--l-blob-1);opacity:.65;top:-100px;right:-80px;left:auto;width:420px;height:420px}
   [data-theme="light"] .splash-blob.sb-2{background:var(--l-blob-2);opacity:.6;bottom:-120px;left:-100px;right:auto;width:380px;height:380px;animation-delay:-4s}
   [data-theme="light"] .splash-blob.sb-3{background:var(--l-blob-3);opacity:.55;top:42%;left:55%;width:320px;height:320px;animation-delay:-9s}
@@ -281,9 +273,7 @@
     transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
   .app-wrap.ready{opacity:1;transform:none}
 
-  /* ═══════════════════════════════════════════════════
-     LIVE AURORA — TWO COMPLETELY SEPARATE SYSTEMS
-     ═══════════════════════════════════════════════════ */
+  /* AURORA */
   .aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
   .aurora-inner{position:absolute;inset:-5%;
     transition:transform .55s cubic-bezier(.2,.8,.2,1);will-change:transform}
@@ -294,7 +284,6 @@
     50%{transform:translate3d(50px,-40px,0) scale(1.18)}
   }
 
-  /* ─── DARK AURORA (3 blobs) ─── */
   #auroraDark{display:none}
   [data-theme="dark"] #auroraDark{display:block}
   #auroraDark .blob{opacity:.28}
@@ -302,7 +291,6 @@
   #auroraDark .blob-2{width:400px;height:400px;background:var(--d-blob-2);bottom:-160px;right:-100px;animation-delay:-7s}
   #auroraDark .blob-3{width:320px;height:320px;background:var(--d-blob-3);top:38%;left:46%;animation-delay:-13s}
 
-  /* ─── LIGHT AURORA (4 blobs, different layout, MORE visible) ─── */
   #auroraLight{display:none}
   [data-theme="light"] #auroraLight{display:block}
   #auroraLight .blob{opacity:.65;filter:blur(80px)}
@@ -323,7 +311,7 @@
     transform:translate(-50%,-50%);animation:rippleOut .85s ease-out forwards}
   @keyframes rippleOut{to{width:340px;height:340px;opacity:0}}
 
-  /* ═══════════ CARDS ═══════════ */
+  /* CARDS */
   .card{position:relative;background:linear-gradient(180deg,var(--card-a),var(--card-b));
     border:1px solid var(--line);border-radius:16px;
     backdrop-filter:blur(20px) saturate(1.1);-webkit-backdrop-filter:blur(20px) saturate(1.1);
@@ -346,7 +334,6 @@
     text-transform:uppercase;color:var(--text-dim)}
   .card-title svg{width:14px;height:14px;flex:none;color:var(--icon-color,currentColor)}
 
-  /* Icon colors per theme */
   .t-source {--icon-color:#2dd4bf}  [data-theme="light"] .t-source {--icon-color:#d946ef}
   .t-tokens {--icon-color:#2dd4bf}  [data-theme="light"] .t-tokens {--icon-color:#be185d}
   .t-semantic{--icon-color:#34d399} [data-theme="light"] .t-semantic{--icon-color:#047857}
@@ -354,7 +341,7 @@
   .t-tac    {--icon-color:#22d3ee}  [data-theme="light"] .t-tac    {--icon-color:#7c3aed}
   .t-output {--icon-color:#34d399}  [data-theme="light"] .t-output {--icon-color:#047857}
 
-  /* ═══════════ EDITOR + GUTTER ═══════════ */
+  /* EDITOR */
   .editor-wrap{display:flex;position:relative;overflow:hidden;min-width:0}
 
   #gutter{
@@ -387,7 +374,6 @@
     #gutter{font-size:16px;line-height:26px;padding:14px 10px 14px 12px;min-width:48px}
   }
 
-  /* Selection color — different per theme */
   #editor::selection{background:var(--brand-soft);color:var(--text-head)}
   [data-theme="light"] #editor::selection{background:rgba(217,70,239,.22)}
 
@@ -411,14 +397,14 @@
     border:1px solid;font-size:11px;
     animation:pop .35s cubic-bezier(.2,.9,.3,1.4) both;transition:transform .18s}
   .tk:hover{transform:translateY(-2px) scale(1.05)}
-  .tk-key  {color:var(--tk-key);  background:var(--tk-key-bg);  border-color:var(--tk-key-bd)}
-  .tk-id   {color:var(--tk-id);   background:var(--tk-id-bg);   border-color:var(--tk-id-bd)}
-  .tk-num  {color:var(--tk-num);  background:var(--tk-num-bg);  border-color:var(--tk-num-bd)}
-  .tk-str  {color:var(--tk-str);  background:var(--tk-str-bg);  border-color:var(--tk-str-bd)}
-  .tk-op   {color:var(--tk-op);   background:var(--tk-op-bg);   border-color:var(--tk-op-bd)}
-  .tk-punc {color:var(--tk-punc); background:var(--tk-punc-bg); border-color:var(--tk-punc-bd)}
-  .tk-eof  {color:var(--tk-eof);  background:var(--tk-eof-bg);  border-color:var(--tk-eof-bd)}
-  .tk-other{color:var(--tk-other);background:var(--tk-other-bg);border-color:var(--tk-other-bd)}
+  .tk-key  {color:var(--tk-key);   background:var(--tk-key-bg);   border-color:var(--tk-key-bd)}
+  .tk-id   {color:var(--tk-id);    background:var(--tk-id-bg);    border-color:var(--tk-id-bd)}
+  .tk-num  {color:var(--tk-num);   background:var(--tk-num-bg);   border-color:var(--tk-num-bd)}
+  .tk-str  {color:var(--tk-str);   background:var(--tk-str-bg);   border-color:var(--tk-str-bd)}
+  .tk-op   {color:var(--tk-op);    background:var(--tk-op-bg);    border-color:var(--tk-op-bd)}
+  .tk-punc {color:var(--tk-punc);  background:var(--tk-punc-bg);  border-color:var(--tk-punc-bd)}
+  .tk-eof  {color:var(--tk-eof);   background:var(--tk-eof-bg);   border-color:var(--tk-eof-bd)}
+  .tk-other{color:var(--tk-other); background:var(--tk-other-bg); border-color:var(--tk-other-bd)}
   @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.85)}to{opacity:1;transform:none}}
 
   .cj-key {color:var(--cj-key)}
@@ -459,7 +445,7 @@
   .icon-btn svg{transition:transform .4s cubic-bezier(.2,.9,.3,1.4)}
   .icon-btn:active svg{transform:rotate(180deg) scale(.9)}
 
-  /* ═══════════ MODAL ═══════════ */
+  /* MODAL */
   .modal-bg{position:fixed;inset:0;z-index:200;background:rgba(3,5,12,.75);backdrop-filter:blur(8px);
     display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;
     transition:opacity .35s ease}
@@ -510,7 +496,7 @@
   .err-detail-inner .label{color:var(--text-dim);font-family:'Inter',sans-serif;font-size:10px;
     text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:4px}
 
-  /* ═══════════ SOCIAL DOCK ═══════════ */
+  /* SOCIAL DOCK */
   .social-dock{position:fixed;left:20px;bottom:20px;z-index:60;
     display:flex;flex-direction:column;gap:9px}
   .dock-btn{position:relative;width:42px;height:42px;border-radius:12px;
@@ -540,7 +526,7 @@
     transition:opacity .22s,transform .22s}
   .dock-btn:hover::after{opacity:1;transform:translateY(-50%) translateX(0)}
 
-  /* ═══════════ TOAST ═══════════ */
+  /* TOAST */
   .toast{position:fixed;bottom:24px;right:24px;z-index:300;max-width:320px;
     padding:12px 16px;border-radius:12px;font-size:12px;
     border:1px solid;backdrop-filter:blur(10px);
@@ -607,7 +593,7 @@
   <div class="splash-progress"></div>
 </div>
 
-<!-- TWO SEPARATE AURORA SYSTEMS -->
+<!-- AURORA SYSTEMS -->
 <div class="aurora">
   <div class="aurora-inner" id="auroraDark">
     <span class="blob blob-1"></span>
@@ -703,20 +689,20 @@
           <div id="gutter" aria-hidden="true">1</div>
           <textarea id="editor" spellcheck="false" autocapitalize="off" autocorrect="off"
                     autocomplete="off" inputmode="text" enterkeyhint="enter"
-                    placeholder="// Write your code here...">// ─────────────────────────────────────────
-//   Mini Compiler Studio — Playground
-// ─────────────────────────────────────────
-//
-//   Write your code below.
-//   Supported: int · float · print · arithmetic
-//
-//   Try something like:
-//
-//     int x = 5;
-//     int y = x + 3;
-//     print(y);
-//
-// ─────────────────────────────────────────
+                    placeholder="// Write your code here...">"""
+==================================================
+  Welcome to Mini Compiler Studio (Python Edition)
+==================================================
+"""
+
+$user_id = 101
+mask_a = 5
+mask_b = 3
+and_res = mask_a & mask_b
+or_res = mask_a | mask_b
+
+print("User ID:", $user_id)
+print("AND:", and_res, "OR:", or_res)
 </textarea>
         </div>
         <div class="border-t px-3 py-2.5 flex flex-wrap items-center gap-2" style="border-color:var(--line)">
@@ -782,29 +768,31 @@
   </p>
 </div>
 
-    <!-- SOCIAL DOCK -->
-   <a href="https://mail.google.com/mail/?view=cm&fs=1&to=mansourhussuen9990@gmail.com" target="_blank" rel="noopener"
-   class="dock-btn" data-label="Email · mansourhussien@gmail.com"
-   style="--dock-brand:#f97316" onclick="sfxClick()" aria-label="Email">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>
-  </svg>
-</a>
+<!-- SOCIAL DOCK -->
+<div class="social-dock">
+  <a href="https://mail.google.com/mail/?view=cm&fs=1&to=mansourhussuen9990@gmail.com" target="_blank" rel="noopener"
+     class="dock-btn" data-label="Email · mansourhussuen9990@gmail.com"
+     style="--dock-brand:#f97316" onclick="sfxClick()" aria-label="Email">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>
+    </svg>
+  </a>
 
-    <a href="https://www.linkedin.com/in/mansour-hussien-83b72b306/" target="_blank" rel="noopener"
-        class="dock-btn" data-label="Eng.Mansour Hussien"
-        style="--dock-brand:#0a66c2" onclick="sfxClick()" aria-label="LinkedIn">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
-        </svg>
-    </a>
-    <a href="https://github.com/mansourhussien22" target="_blank" rel="noopener"
-        class="dock-btn" data-label="GitHub · @mansourhussien22"
-        style="--dock-brand:#24292f" onclick="sfxClick()" aria-label="GitHub">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18.92-.26 1.91-.38 2.9-.39 1 0 1.99.13 2.9.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.68.8.56C20.71 21.39 24 17.08 24 12 24 5.65 18.35.5 12 .5z"/>
-        </svg>
-    </a>
+  <a href="https://www.linkedin.com/in/mansour-hussien-83b72b306/" target="_blank" rel="noopener"
+     class="dock-btn" data-label="Eng.Mansour Hussien"
+     style="--dock-brand:#0a66c2" onclick="sfxClick()" aria-label="LinkedIn">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
+    </svg>
+  </a>
+
+  <a href="https://github.com/mansourhussien22" target="_blank" rel="noopener"
+     class="dock-btn" data-label="GitHub · @mansourhussien22"
+     style="--dock-brand:#24292f" onclick="sfxClick()" aria-label="GitHub">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18.92-.26 1.91-.38 2.9-.39 1 0 1.99.13 2.9.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.68.8.56C20.71 21.39 24 17.08 24 12 24 5.65 18.35.5 12 .5z"/>
+    </svg>
+  </a>
 </div>
 
 <!-- ERROR MODAL -->
@@ -832,7 +820,7 @@
 <script>
 'use strict';
 
-/* ═══════════ THEME ═══════════ */
+/* THEME */
 const THEME_ICONS = {
   dark: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
   light: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
@@ -842,7 +830,6 @@ function applyTheme(theme){
   try { localStorage.setItem('mcs-theme', theme); } catch(_) {}
   const icon = document.getElementById('themeIcon');
   if (icon) icon.innerHTML = THEME_ICONS[theme] || THEME_ICONS.dark;
-  // Reset aurora transform to avoid jump
   document.querySelectorAll('.aurora-inner').forEach(el => {
     el.style.transform = 'translate(0,0)';
   });
@@ -861,19 +848,7 @@ function toggleTheme(){
   if (icon) icon.innerHTML = THEME_ICONS[t] || THEME_ICONS.dark;
 })();
 
-/* Listen for system changes if user hasn't set preference */
-try {
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
-  const handler = e => {
-    if (!localStorage.getItem('mcs-theme')) {
-      applyTheme(e.matches ? 'light' : 'dark');
-    }
-  };
-  if (mediaQuery.addEventListener) mediaQuery.addEventListener('change', handler);
-  else if (mediaQuery.addListener) mediaQuery.addListener(handler);
-} catch(_) {}
-
-/* ═══════════ AUDIO ═══════════ */
+/* AUDIO */
 let audioCtx = null, soundOn = true, welcomePlayed = false;
 function initAudio(){
   if (audioCtx){
@@ -973,7 +948,7 @@ function toggleSound(){
   if (soundOn) sfxClick();
 }
 
-/* ═══════════ SPLASH ═══════════ */
+/* SPLASH */
 (function(){
   const titleEl = document.getElementById('splashTitle');
   const text = 'Mini Compiler';
@@ -998,15 +973,12 @@ function toggleSound(){
   }, 2600);
 })();
 
-/* ═══════════════════════════════════════════════════
-   LIVE AURORA — CURSOR TRACKING (strong in light mode)
-   ═══════════════════════════════════════════════════ */
+/* CURSOR TRACKING */
 const auroraInners = document.querySelectorAll('.aurora-inner');
 let mouseNx = 0, mouseNy = 0, auroraRafId = 0;
 
 function updateAuroraTransform(){
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-  // Stronger movement in light mode (blobs need to be felt)
   const strength = isLight ? 110 : 55;
   const x = mouseNx * strength;
   const y = mouseNy * strength;
@@ -1022,7 +994,6 @@ document.addEventListener('mousemove', e => {
   auroraRafId = requestAnimationFrame(updateAuroraTransform);
 }, { passive: true });
 
-/* Also respond to touch for mobile */
 document.addEventListener('touchmove', e => {
   if (!e.touches[0]) return;
   mouseNx = (e.touches[0].clientX / window.innerWidth  - .5);
@@ -1040,7 +1011,7 @@ document.addEventListener('click', e => {
   setTimeout(() => r.remove(), 900);
 });
 
-/* ═══════════ HELPERS ═══════════ */
+/* HELPERS */
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => (
   {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
@@ -1050,7 +1021,7 @@ const EMPTY = txt => `<div class="m-auto flex flex-col items-center gap-2" style
     <circle cx="12" cy="12" r="9"/><path d="M9 12h6"/></svg>
   <span class="text-[11px] italic">${txt}</span></div>`;
 
-/* ═══════════ EDITOR + GUTTER ═══════════ */
+/* EDITOR + GUTTER */
 const editor = $('#editor');
 const gutter = $('#gutter');
 const lineCountEl = $('#lineCount');
@@ -1085,16 +1056,16 @@ document.addEventListener('keydown', e => {
 syncGutter();
 autoResizeEditor();
 
-/* ═══════════ TOKEN CLASSES ═══════════ */
+/* TOKENS */
 function tokenClass(type){
   const k = (type || '').toUpperCase();
-  if (k.includes('KEY'))                              return 'tk-key';
-  if (k.includes('ID'))                               return 'tk-id';
+  if (k.includes('KEY'))                                return 'tk-key';
+  if (k.includes('ID'))                                 return 'tk-id';
   if (k.includes('NUM')||k.includes('INT')||k.includes('FLOAT')) return 'tk-num';
-  if (k.includes('STR'))                              return 'tk-str';
-  if (k.includes('OP'))                               return 'tk-op';
-  if (k.includes('PUNC')||k.includes('SEP'))          return 'tk-punc';
-  if (k.includes('EOF'))                              return 'tk-eof';
+  if (k.includes('STR'))                                return 'tk-str';
+  if (k.includes('OP'))                                 return 'tk-op';
+  if (k.includes('PUNC')||k.includes('SEP'))           return 'tk-punc';
+  if (k.includes('EOF'))                                return 'tk-eof';
   return 'tk-other';
 }
 function colorJSON(str){
@@ -1105,7 +1076,6 @@ function colorJSON(str){
     .replace(/\b(true|false|null)\b/g,      '<span class="cj-bool">$1</span>');
 }
 
-/* ═══════════ COPY / TOAST / STATUS ═══════════ */
 function copyBox(id){
   navigator.clipboard.writeText($('#'+id).innerText)
     .then(()=>toast('Copied ✓', true))
@@ -1124,11 +1094,11 @@ function setStatus(text, color){
   $('#statusDot').className = 'w-1.5 h-1.5 rounded-full ' + color;
 }
 
-/* ═══════════ ERROR MODAL ═══════════ */
+/* ERROR MODAL */
 function detectStage(err){
   if (err && typeof err === 'object' && err.stage) return err.stage;
   const s = String(err && typeof err === 'object' ? err.message : err).toLowerCase();
-  if (s.includes('unterminated')||s.includes('unexpected character')||s.includes('invalid token')) return 'Lexer';
+  if (s.includes('unterminated')||s.includes('unexpected character')||s.includes('unknown character')||s.includes('invalid token')) return 'Lexer';
   if (s.includes('expected')||s.includes('unexpected')||s.includes('parse')) return 'Parser';
   return 'Semantic';
 }
@@ -1158,7 +1128,7 @@ function closeErrorModal(){
   sfxClick();
 }
 
-/* ═══════════ RUN COMPILER ═══════════ */
+/* ═══════════ RUN COMPILER (DESKTOP + WEB DUAL BRIDGE) ═══════════ */
 async function runCompiler(){
   const btn  = $('#runBtn');
   const code = editor.value.trim();
@@ -1174,20 +1144,26 @@ async function runCompiler(){
 
   const t0 = performance.now();
   try {
-    const res = await fetch('/compile', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ source_code: code })
-    });
-    if (!res.ok) throw new Error('Server responded ' + res.status);
-    const data = await res.json();
+    let data;
+    // التحقق التلقائي: هل يعمل كـ Desktop App أم موقع ويب على Vercel؟
+    if (window.pywebview && window.pywebview.api) {
+      data = await window.pywebview.api.compile_code(code);
+    } else {
+      const res = await fetch('/compile', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ source_code: code })
+      });
+      if (!res.ok) throw new Error('Server responded ' + res.status);
+      data = await res.json();
+    }
     const elapsed = Math.round(performance.now() - t0);
 
     const tokens = data.tokens || [];
     $('#tokensBox').innerHTML = tokens.length
       ? tokens.map((t,i)=>`<span class="tk ${tokenClass(t.type)}" style="animation-delay:${Math.min(i*16,500)}ms">
-             <span class="opacity-60">${esc(t.type)}</span><span class="opacity-30">·</span>
-             <b class="font-medium">${esc(t.value)}</b></span>`).join('')
+              <span class="opacity-60">${esc(t.type)}</span><span class="opacity-30">·</span>
+              <b class="font-medium">${esc(t.value)}</b></span>`).join('')
       : EMPTY('No tokens produced');
     $('#tokenCount').textContent  = tokens.length;
     $('#statTokens').textContent  = tokens.length;
@@ -1196,24 +1172,24 @@ async function runCompiler(){
     $('#statErrors').textContent = errors.length;
     $('#semanticBox').innerHTML = errors.length
       ? `<div class="w-full fade-in rounded-xl border p-4" style="border-color:var(--err-bd);background:var(--err-bg)">
-           <div class="flex items-center gap-2 mb-3">
-             <span class="w-2 h-2 rounded-full animate-pulse" style="background:var(--err-text)"></span>
-             <span class="text-[11px] font-semibold uppercase tracking-wider" style="color:var(--err-text)">
-               ${errors.length} Error${errors.length>1?'s':''} Detected
-             </span>
-           </div>
-           <button onclick="openErrorModal(window.__lastErrors)" class="text-[11px] underline underline-offset-2" style="color:var(--err-text)">
-             View full details →
-           </button>
-         </div>`
+            <div class="flex items-center gap-2 mb-3">
+              <span class="w-2 h-2 rounded-full animate-pulse" style="background:var(--err-text)"></span>
+              <span class="text-[11px] font-semibold uppercase tracking-wider" style="color:var(--err-text)">
+                ${errors.length} Error${errors.length>1?'s':''} Detected
+              </span>
+            </div>
+            <button onclick="openErrorModal(window.__lastErrors)" class="text-[11px] underline underline-offset-2" style="color:var(--err-text)">
+              View full details →
+            </button>
+          </div>`
       : `<div class="w-full fade-in rounded-xl border p-4 text-center" style="border-color:var(--ok-bd);background:var(--ok-bg)">
-           <div class="mx-auto w-9 h-9 rounded-full grid place-items-center mb-2" style="background:var(--ok-dot-bg)">
-             <svg viewBox="0 0 24 24" fill="none" stroke="var(--ok-text)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
-               <polyline points="20 6 9 17 4 12"/></svg>
-           </div>
-           <p class="font-semibold text-xs" style="color:var(--ok-text)">No Errors Found</p>
-           <p class="text-[10px] mt-1" style="color:var(--ok-text-dim)">Code passed semantic analysis</p>
-         </div>`;
+            <div class="mx-auto w-9 h-9 rounded-full grid place-items-center mb-2" style="background:var(--ok-dot-bg)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--ok-text)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                <polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <p class="font-semibold text-xs" style="color:var(--ok-text)">No Errors Found</p>
+            <p class="text-[10px] mt-1" style="color:var(--ok-text-dim)">Code passed semantic analysis</p>
+          </div>`;
     window.__lastErrors = errors;
 
     const output = data.output ?? data.stdout ?? data.result ?? '';
@@ -1222,13 +1198,13 @@ async function runCompiler(){
       outputBadge.textContent = 'blocked';
       outputBadge.style.color = 'var(--err-text)';
       $('#outputBox').innerHTML = `<div class="italic text-[11px]" style="color:var(--err-text)">Program output blocked — fix errors first.</div>`;
-    } else if (output){
+    } else if (output && (Array.isArray(output) ? output.length > 0 : String(output).trim() !== '')){
       const lines = Array.isArray(output) ? output : String(output).split('\n');
       outputBadge.textContent = 'stdout';
       outputBadge.style.color = 'var(--brand)';
       $('#outputBox').innerHTML = lines.map((line,i)=>
         `<div class="out-line" style="animation-delay:${Math.min(i*50,500)}ms">
-           <span class="arrow">›</span><span class="txt">${esc(line)}</span></div>`).join('');
+            <span class="arrow">›</span><span class="txt">${esc(line)}</span></div>`).join('');
     } else {
       outputBadge.textContent = 'stdout';
       outputBadge.style.color = 'var(--text-mute)';
@@ -1244,8 +1220,8 @@ async function runCompiler(){
     $('#statTac').textContent = tac.length;
     $('#tacBox').innerHTML = tac.length
       ? tac.map((line,i)=>`<div class="fade-in flex gap-3" style="animation-delay:${Math.min(i*30,400)}ms">
-             <span class="select-none w-5 text-right shrink-0" style="color:var(--text-mute)">${i+1}</span>
-             <span>${esc(line)}</span></div>`).join('')
+              <span class="select-none w-5 text-right shrink-0" style="color:var(--text-mute)">${i+1}</span>
+              <span>${esc(line)}</span></div>`).join('')
       : '<span class="italic" style="color:var(--text-mute)">// No TAC generated</span>';
 
     $('#statTime').textContent = elapsed + ' ms';
