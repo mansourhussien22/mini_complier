@@ -23,18 +23,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* ═══ CRITICAL FIX: overflow on html, NOT body — keeps position:fixed working ═══ */
   html{
     overflow-x:hidden;
     overscroll-behavior-y:none;
   }
-  body{
-    overflow-x:clip;   /* clip > hidden for fixed positioning */
-    overflow-y:auto;
-  }
 
   /* ═══════════════════════════════════════════════════════════
-     🌙 DARK MODE — "Midnight Code Lab"
+     🌙 DARK MODE
      ═══════════════════════════════════════════════════════════ */
   :root{
     --bg:#060a12;
@@ -104,7 +99,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════
-     ☀️ LIGHT MODE — "Sunrise Studio"
+     ☀️ LIGHT MODE
      ═══════════════════════════════════════════════════════════ */
   [data-theme="light"]{
     --bg:#fdf4ff;
@@ -185,7 +180,6 @@
     font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);
     transition:background .4s ease,color .3s ease;
     -webkit-text-size-adjust:100%;text-size-adjust:100%;
-    /* GPU hint for smoother scrolling */
     -webkit-overflow-scrolling:touch;
   }
 
@@ -270,7 +264,7 @@
     transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
   .app-wrap.ready{opacity:1;transform:none}
 
-  /* AURORA — lighter blur */
+  /* AURORA */
   .aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;contain:strict}
   .aurora-inner{position:absolute;inset:-5%;
     transition:transform .5s cubic-bezier(.2,.8,.2,1);will-change:transform}
@@ -308,7 +302,7 @@
     transform:translate(-50%,-50%);animation:rippleOut .8s ease-out forwards}
   @keyframes rippleOut{to{width:300px;height:300px;opacity:0}}
 
-  /* CARDS — solid-ish background, NO backdrop-filter blur (perf) */
+  /* CARDS */
   .card{position:relative;background:linear-gradient(180deg,var(--card-a),var(--card-b));
     border:1px solid var(--line);border-radius:16px;
     transition:border-color .3s,box-shadow .3s,transform .3s cubic-bezier(.2,.8,.2,1);
@@ -482,64 +476,56 @@
     text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:4px}
 
   /* ═══════════════════════════════════════════════════════════
-     SOCIAL DOCK — Fixed & dynamic (auto-hide on scroll down)
+     SOCIAL LINKS — bottom of page, in normal flow
      ═══════════════════════════════════════════════════════════ */
-  .social-dock{
-    position:fixed;
-    left:16px;
-    bottom:16px;
-    z-index:80;
-    display:flex;flex-direction:column;gap:9px;
-    transition:transform .4s cubic-bezier(.2,.9,.3,1.15),opacity .3s ease;
-    will-change:transform;
-    transform:translateZ(0);           /* force own layer, keeps fixed stable */
-    -webkit-transform:translateZ(0);
-  }
-  /* Hidden state — slides left & fades */
-  .social-dock.hidden-dock{
-    transform:translate3d(-90px, 0, 0) translateZ(0);
-    opacity:.15;
-    pointer-events:none;
-  }
-  /* Entrance animation on page load */
-  @keyframes dockSlideIn{
-    from{transform:translate3d(-90px, 0, 0) translateZ(0);opacity:0}
-    to{transform:translate3d(0, 0, 0) translateZ(0);opacity:1}
-  }
-  .social-dock.dock-entrance{
-    animation:dockSlideIn .6s cubic-bezier(.2,.9,.3,1.15) .4s both;
+  .social-links{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:8px;
   }
 
-  .dock-btn{
-    position:relative;width:42px;height:42px;border-radius:12px;
-    display:grid;place-items:center;
-    background:var(--card-a);
+  .social-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 16px;
+    border-radius:12px;
     border:1px solid var(--brand-line);
-    color:var(--text-dim);cursor:pointer;text-decoration:none;
-    transition:transform .25s cubic-bezier(.2,.9,.3,1.2),border-color .2s,color .2s,box-shadow .25s,background .3s;
-    overflow:visible;
-    transform:translateZ(0);
+    background:var(--card-a);
+    color:var(--text-dim);
+    text-decoration:none;
+    font-size:12px;
+    font-weight:500;
+    letter-spacing:.01em;
+    transition:transform .25s cubic-bezier(.2,.9,.3,1.2),
+               border-color .2s,color .2s,box-shadow .25s,background .3s;
   }
-  [data-theme="light"] .dock-btn{background:rgba(255,250,252,.94)}
-  .dock-btn svg{width:20px;height:20px;flex-shrink:0;transition:transform .25s}
-  .dock-btn:hover,.dock-btn:active{
-    transform:translateY(-2px) scale(1.06) translateZ(0);
+
+  .social-link svg{
+    width:16px;
+    height:16px;
+    flex-shrink:0;
+    transition:transform .25s;
+  }
+
+  .social-link:hover{
+    transform:translateY(-2px);
     border-color:var(--dock-brand,var(--brand));
     background:var(--card-b);
+    color:var(--text-head);
     box-shadow:0 10px 25px -10px var(--dock-brand,var(--brand));
-    color:var(--text-head)}
-  .dock-btn:hover svg{transform:scale(1.08)}
-  .dock-btn::after{content:attr(data-label);
-    position:absolute;left:calc(100% + 12px);top:50%;
-    transform:translateY(-50%) translateX(-6px);
-    background:var(--card-a);color:var(--text);
-    padding:6px 11px;border-radius:9px;
-    font-size:11px;font-weight:500;letter-spacing:.02em;
-    opacity:0;pointer-events:none;white-space:nowrap;
-    border:1px solid var(--brand-line);
-    box-shadow:0 8px 20px -10px rgba(0,0,0,.3);
-    transition:opacity .2s,transform .2s}
-  .dock-btn:hover::after{opacity:1;transform:translateY(-50%) translateX(0)}
+  }
+
+  .social-link:hover svg{transform:scale(1.1)}
+
+  @media (max-width:640px){
+    .social-links{gap:8px}
+    .social-link{padding:8px 12px;font-size:11px}
+    .social-link svg{width:14px;height:14px}
+  }
 
   /* TOAST */
   .toast{position:fixed;bottom:24px;right:24px;z-index:300;max-width:320px;
@@ -551,42 +537,28 @@
   .toast.ok{border-color:var(--toast-ok-bd);background:var(--toast-ok-bg);color:var(--toast-ok-text)}
   .toast.err{border-color:var(--toast-err-bd);background:var(--toast-err-bg);color:var(--toast-err-text)}
 
-  /* ═══════════════════════════════════════════════════════════
-     📱 MOBILE — disable heavy effects, reduce animations
-     ═══════════════════════════════════════════════════════════ */
+  /* MOBILE OPTIMIZATIONS */
   @media (max-width:640px){
-    /* No aurora animations on mobile — static, tiny, blurred less */
     .aurora-inner{transition:none !important;transform:none !important}
     .blob{animation:none !important;filter:blur(40px) !important}
     #auroraDark .blob{opacity:.22}
     #auroraLight .blob{opacity:.5}
     #auroraLight .blob-3,#auroraLight .blob-4{display:none}
 
-    /* No backdrop-filter anywhere on mobile */
     .card{backdrop-filter:none;-webkit-backdrop-filter:none}
-    .dock-btn{backdrop-filter:none;-webkit-backdrop-filter:none}
 
-    /* Splash — lighter */
     .splash-blob{animation:none;filter:blur(40px)}
     .splash-icon{animation:none;filter:none}
     .splash-ring{animation:none;opacity:.5}
-
-    /* Social dock — smaller, no tooltip */
-    .social-dock{left:10px;bottom:10px;gap:7px}
-    .dock-btn{width:40px;height:40px;border-radius:11px}
-    .dock-btn svg{width:18px;height:18px}
-    .dock-btn::after{display:none}
 
     .card-body,#tokensBox{max-height:220px}
     .output-body{max-height:200px}
     #editor{max-height:340px}
 
-    /* Reduce shadows on mobile */
     .card:hover{box-shadow:none}
     .btn-run:hover{transform:none}
   }
 
-  /* If user prefers reduced motion — kill everything */
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{
       animation-duration:.01ms !important;
@@ -687,7 +659,7 @@
       <div class="min-w-0">
         <h1 class="text-base sm:text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 flex-wrap" style="color:var(--text-head)">
           Mini Compiler Studio
-          <span class="pill">v3.2</span>
+          <span class="pill">v3.4</span>
         </h1>
         <p class="text-[11px] mt-0.5 hidden sm:block" style="color:var(--text-dim)">Lexer · Parser · Semantic Analyzer · Three-Address Code</p>
       </div>
@@ -810,36 +782,49 @@
     </section>
   </main>
 
-  <p class="text-center text-[10px] pb-2" style="color:var(--text-mute)">
-    Mini Compiler Studio · <span class="mono">Ctrl</span> + <span class="mono">Enter</span> to compile
-  </p>
-</div>
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER — Social links at bottom of page
+       ═══════════════════════════════════════════════════════════ -->
+  <footer class="pt-6 pb-8 space-y-5">
+    <div class="social-links">
+      <!-- EMAIL -->
+      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=mansourhussuen9990@gmail.com"
+         target="_blank" rel="noopener"
+         class="social-link" style="--dock-brand:#f97316"
+         onclick="sfxClick()" aria-label="Email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>
+        </svg>
+        <span>Email</span>
+      </a>
 
-<!-- SOCIAL DOCK -->
-<div class="social-dock dock-entrance" id="socialDock">
-  <a href="https://mail.google.com/mail/?view=cm&fs=1&to=mansourhussuen9990@gmail.com" target="_blank" rel="noopener"
-     class="dock-btn" data-label="Email · mansourhussuen9990@gmail.com"
-     style="--dock-brand:#f97316" onclick="sfxClick()" aria-label="Email">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>
-    </svg>
-  </a>
+      <!-- LINKEDIN -->
+      <a href="https://www.linkedin.com/in/mansour-hussien-83b72b306/"
+         target="_blank" rel="noopener"
+         class="social-link" style="--dock-brand:#0a66c2"
+         onclick="sfxClick()" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
+        </svg>
+        <span>LinkedIn</span>
+      </a>
 
-  <a href="https://www.linkedin.com/in/mansour-hussien-83b72b306/" target="_blank" rel="noopener"
-     class="dock-btn" data-label="Eng.Mansour Hussien"
-     style="--dock-brand:#0a66c2" onclick="sfxClick()" aria-label="LinkedIn">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
-    </svg>
-  </a>
+      <!-- GITHUB -->
+      <a href="https://github.com/mansourhussien22"
+         target="_blank" rel="noopener"
+         class="social-link" style="--dock-brand:#24292f"
+         onclick="sfxClick()" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18.92-.26 1.91-.38 2.9-.39 1 0 1.99.13 2.9.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.68.8.56C20.71 21.39 24 17.08 24 12 24 5.65 18.35.5 12 .5z"/>
+        </svg>
+        <span>GitHub</span>
+      </a>
+    </div>
 
-  <a href="https://github.com/mansourhussien22" target="_blank" rel="noopener"
-     class="dock-btn" data-label="GitHub · @mansourhussien22"
-     style="--dock-brand:#24292f" onclick="sfxClick()" aria-label="GitHub">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18.92-.26 1.91-.38 2.9-.39 1 0 1.99.13 2.9.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.68.8.56C20.71 21.39 24 17.08 24 12 24 5.65 18.35.5 12 .5z"/>
-    </svg>
-  </a>
+    <p class="text-center text-[10px]" style="color:var(--text-mute)">
+      Mini Compiler Studio · <span class="mono">Ctrl</span> + <span class="mono">Enter</span> to compile
+    </p>
+  </footer>
 </div>
 
 <!-- ERROR MODAL -->
@@ -1025,10 +1010,7 @@ function toggleSound(){
   }, 2400);
 })();
 
-/* ═══════════════════════════════════════════════════
-   LIVE AURORA — throttled cursor tracking
-   Only on desktop (hover + fine pointer)
-   ═══════════════════════════════════════════════════ */
+/* LIVE AURORA — desktop only */
 const isDesktop = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
 const auroraInners = document.querySelectorAll('.aurora-inner');
 let mouseNx = 0, mouseNy = 0, auroraRafId = 0;
@@ -1052,7 +1034,7 @@ if (isDesktop){
   }, { passive: true });
 }
 
-/* Ripple on click (lightweight) */
+/* Ripple on click */
 document.addEventListener('click', e => {
   const r = document.createElement('div');
   r.className = 'ripple';
@@ -1061,49 +1043,6 @@ document.addEventListener('click', e => {
   document.body.appendChild(r);
   setTimeout(() => r.remove(), 800);
 });
-
-/* ═══════════════════════════════════════════════════
-   SOCIAL DOCK — Auto hide on scroll down, show on scroll up
-   ═══════════════════════════════════════════════════ */
-(function(){
-  const dock = document.getElementById('socialDock');
-  if (!dock) return;
-
-  let lastY = window.scrollY;
-  let ticking = false;
-  let hidden = false;
-
-  function onScroll(){
-    const y = window.scrollY;
-    const delta = y - lastY;
-
-    // scroll down by more than 40px and past 200px → hide
-    if (delta > 40 && y > 200 && !hidden){
-      dock.classList.add('hidden-dock');
-      hidden = true;
-    }
-    // scroll up by more than 20px → show
-    else if (delta < -20 && hidden){
-      dock.classList.remove('hidden-dock');
-      hidden = false;
-    }
-    // near top → always show
-    if (y < 100 && hidden){
-      dock.classList.remove('hidden-dock');
-      hidden = false;
-    }
-
-    lastY = y;
-    ticking = false;
-  }
-
-  window.addEventListener('scroll', () => {
-    if (!ticking){
-      requestAnimationFrame(onScroll);
-      ticking = true;
-    }
-  }, { passive: true });
-})();
 
 /* ═══════════ HELPERS ═══════════ */
 const $ = s => document.querySelector(s);
