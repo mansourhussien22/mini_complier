@@ -228,7 +228,6 @@
     <div class="splash-logo">
       <span class="splash-ring"></span><span class="splash-ring splash-ring-2"></span>
       <div class="splash-icon">
-        <!-- ═ PROFESSIONAL HEXAGON LOGO ═ -->
         <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="lgMain" x1="0" y1="0" x2="1" y2="1">
@@ -299,7 +298,7 @@
       <div>
         <h1 class="text-lg md:text-xl font-bold text-white tracking-tight flex items-center gap-2">
           Mini Compiler Studio
-          <span class="pill bg-teal-500/15 text-teal-300 border border-teal-500/30">v2.3</span>
+          <span class="pill bg-teal-500/15 text-teal-300 border border-teal-500/30">v2.4</span>
         </h1>
         <p class="text-[11px] text-slate-400 mt-0.5">Lexer · Parser · Semantic Analyzer · Three-Address Code</p>
       </div>
@@ -336,7 +335,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             Source Code
           </span>
-          <span class="text-[10px] mono text-slate-500">C-like syntax</span>
         </div>
         <div class="flex-1 flex overflow-hidden min-h-0">
           <div id="gutter" class="mono select-none">1</div>
@@ -344,7 +342,7 @@
 //   Mini Compiler Studio — Playground
 // ─────────────────────────────────────────
 //
-//   Write your C-like code below.
+//   Write your code below.
 //   Supported: int · float · print · arithmetic
 //
 //   Try something like:
@@ -407,11 +405,9 @@
 
 <!-- ═══════════════════════════════════════════════════════════
      ►►► [ SOCIAL DOCK — EDIT YOUR LINKS HERE ] ◄◄◄
-     Edit the href + data-label for each button
      ═══════════════════════════════════════════════════════════ -->
 <div class="social-dock">
 
-  <!-- EMAIL -->
   <a href="mailto:you@example.com"
      class="dock-btn" data-label="Email · you@example.com"
      style="--dock-brand:#f97316" onclick="sfxClick()" aria-label="Email">
@@ -421,7 +417,6 @@
     </svg>
   </a>
 
-  <!-- LINKEDIN -->
   <a href="https://linkedin.com/in/your-username"
      target="_blank" rel="noopener"
      class="dock-btn" data-label="LinkedIn · /in/your-username"
@@ -431,7 +426,6 @@
     </svg>
   </a>
 
-  <!-- GITHUB -->
   <a href="https://github.com/your-username"
      target="_blank" rel="noopener"
      class="dock-btn" data-label="GitHub · @your-username"
@@ -473,10 +467,11 @@
    AUDIO ENGINE
    ═══════════════════════════════════════════ */
 let audioCtx = null;
-let soundOn = true;
+let soundOn  = true;
+let welcomePlayed = false;
 
 function initAudio(){
-  if (audioCtx) {
+  if (audioCtx){
     if (audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
     return;
   }
@@ -501,52 +496,122 @@ function beep(freq, dur, type = 'sine', vol = 0.05){
   osc.stop(now + dur);
 }
 
-/* ─── Welcome chime: warm C major 9 arpeggio ─── */
+/* ─────────────────────────────────────────
+   WELCOME — Hero pad + upward arpeggio + shimmer
+   Feels: epic + relaxing at the same time
+   ───────────────────────────────────────── */
 function playWelcomeChime(){
-  if (!soundOn || !audioCtx) return;
+  if (welcomePlayed || !soundOn || !audioCtx) return;
+  welcomePlayed = true;
+
   const now = audioCtx.currentTime;
 
-  // Master gain for the whole chime
+  // ── Master bus with soft reverb-ish fade
   const master = audioCtx.createGain();
   master.gain.setValueAtTime(0.0001, now);
-  master.gain.exponentialRampToValueAtTime(0.16, now + 0.18);
-  master.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
+  master.gain.exponentialRampToValueAtTime(0.16, now + 0.6);
+  master.gain.setValueAtTime(0.16, now + 2.0);
+  master.gain.exponentialRampToValueAtTime(0.0001, now + 4.0);
   master.connect(audioCtx.destination);
 
-  // Arpeggio notes: C5, E5, G5, B5, D6
-  const notes = [
-    { f: 523.25, t: 0.00 },
-    { f: 659.25, t: 0.14 },
-    { f: 783.99, t: 0.28 },
-    { f: 987.77, t: 0.42 },
-    { f: 1174.66, t: 0.56 }
-  ];
-
-  notes.forEach(({ f, t }) => {
-    const osc = audioCtx.createOscillator();
-    const g   = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = f;
-    g.gain.setValueAtTime(0.0001, now + t);
-    g.gain.exponentialRampToValueAtTime(0.30, now + t + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + t + 1.6);
-    osc.connect(g).connect(master);
-    osc.start(now + t);
-    osc.stop(now + t + 1.7);
+  // ── Layer 1: Warm bass pad (C3 + G3) — deep & warm
+  [130.81, 196.00].forEach((f, i) => {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'triangle';
+    o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(0.055 - i*0.01, now + 0.8);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 3.8);
+    o.connect(g).connect(master);
+    o.start(now);
+    o.stop(now + 4.0);
   });
 
-  // Warm bass pad underneath
-  const bass = audioCtx.createOscillator();
-  const bg   = audioCtx.createGain();
-  bass.type = 'triangle';
-  bass.frequency.value = 130.81; // C3
-  bg.gain.setValueAtTime(0.0001, now);
-  bg.gain.exponentialRampToValueAtTime(0.06, now + 0.4);
-  bg.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
-  bass.connect(bg).connect(master);
-  bass.start(now);
-  bass.stop(now + 2.5);
+  // ── Layer 2: Warm bell arpeggio (C major → resolves up)
+  const arp = [
+    { f: 523.25, t: 0.00 },  // C5
+    { f: 659.25, t: 0.18 },  // E5
+    { f: 783.99, t: 0.36 },  // G5
+    { f: 1046.5, t: 0.56 }   // C6
+  ];
+  arp.forEach(({ f, t }) => {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, now + t);
+    g.gain.exponentialRampToValueAtTime(0.16, now + t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + t + 1.8);
+    o.connect(g).connect(master);
+    o.start(now + t);
+    o.stop(now + t + 1.9);
+  });
+
+  // ── Layer 3: High shimmer sparkle (E6) — the "wow" moment
+  const sparkle = audioCtx.createOscillator();
+  const sg      = audioCtx.createGain();
+  sparkle.type = 'sine';
+  sparkle.frequency.value = 1318.51; // E6
+  sg.gain.setValueAtTime(0.0001, now + 0.75);
+  sg.gain.exponentialRampToValueAtTime(0.09, now + 0.85);
+  sg.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
+  sparkle.connect(sg).connect(master);
+  sparkle.start(now + 0.75);
+  sparkle.stop(now + 2.7);
+
+  // ── Layer 4: Faint second sparkle (G6) — extra air
+  const sparkle2 = audioCtx.createOscillator();
+  const sg2      = audioCtx.createGain();
+  sparkle2.type = 'sine';
+  sparkle2.frequency.value = 1567.98; // G6
+  sg2.gain.setValueAtTime(0.0001, now + 0.95);
+  sg2.gain.exponentialRampToValueAtTime(0.05, now + 1.05);
+  sg2.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
+  sparkle2.connect(sg2).connect(master);
+  sparkle2.start(now + 0.95);
+  sparkle2.stop(now + 2.5);
 }
+
+/* ─── Try autoplay immediately on page load ─── */
+(function tryAutoplay(){
+  initAudio();
+  if (!audioCtx) return;
+
+  const attempt = () => {
+    if (audioCtx.state === 'running'){
+      // Small delay so the splash visuals start first, then the sound
+      setTimeout(playWelcomeChime, 300);
+      return true;
+    }
+    return false;
+  };
+
+  // 1. Resume + attempt
+  audioCtx.resume().then(() => {
+    if (!attempt()){
+      // 2. Fallback: first user gesture (which is usually milliseconds away)
+      const events = ['pointerdown', 'pointermove', 'touchstart', 'keydown', 'scroll', 'click'];
+      const unlock = () => {
+        events.forEach(e => document.removeEventListener(e, unlock, true));
+        audioCtx.resume().then(() => {
+          setTimeout(playWelcomeChime, 120);
+        }).catch(()=>{});
+      };
+      events.forEach(e => document.addEventListener(e, unlock, { passive: true, capture: true }));
+    }
+  }).catch(() => {
+    // Resume rejected → fallback to first gesture
+    const events = ['pointerdown', 'pointermove', 'touchstart', 'keydown', 'scroll', 'click'];
+    const unlock = () => {
+      events.forEach(e => document.removeEventListener(e, unlock, true));
+      audioCtx.resume().then(() => {
+        setTimeout(playWelcomeChime, 120);
+      }).catch(()=>{});
+    };
+    events.forEach(e => document.addEventListener(e, unlock, { passive: true, capture: true }));
+  });
+})();
 
 /* ─── SFX shortcuts ─── */
 function sfxClick()   { beep(880, 0.06, 'square', 0.022); }
@@ -583,26 +648,6 @@ function toggleSound(){
     : '<path d="M11 5 6 9H2v6h4l5 4z"/><path d="m23 9-6 6M17 9l6 6"/>';
   if (soundOn) sfxClick();
 }
-
-/* ─── Arm welcome chime on first interaction ─── */
-(function armWelcome(){
-  let played = false;
-  const events = ['pointerdown', 'pointermove', 'touchstart', 'keydown', 'scroll', 'click'];
-
-  async function handler(){
-    if (played) return;
-    played = true;
-    events.forEach(e => document.removeEventListener(e, handler, true));
-
-    initAudio();
-    if (!audioCtx) return;
-    try { await audioCtx.resume(); } catch(_) {}
-    // slight delay so the context is fully running
-    setTimeout(playWelcomeChime, 60);
-  }
-
-  events.forEach(e => document.addEventListener(e, handler, { passive: true, capture: true }));
-})();
 
 /* ═══════════════════════════════════════════
    SPLASH
@@ -816,7 +861,6 @@ async function runCompiler(){
     const data    = await res.json();
     const elapsed = Math.round(performance.now() - t0);
 
-    /* ─── Tokens ─── */
     const tokens = data.tokens || [];
     $('#tokensBox').innerHTML = tokens.length
       ? tokens.map((t, i) =>
@@ -829,7 +873,6 @@ async function runCompiler(){
     $('#tokenCount').textContent  = tokens.length;
     $('#statTokens').textContent  = tokens.length;
 
-    /* ─── Semantic ─── */
     const errors = data.errors || [];
     $('#statErrors').textContent = errors.length;
     $('#semanticBox').innerHTML = errors.length
@@ -854,13 +897,11 @@ async function runCompiler(){
          </div>`;
     window.__lastErrors = errors;
 
-    /* ─── AST ─── */
     const ast = data.syntax_tree;
     $('#astBox').innerHTML = (ast && Object.keys(ast).length)
       ? colorJSON(JSON.stringify(ast, null, 2))
       : '<span class="text-slate-600 italic">No syntax tree generated</span>';
 
-    /* ─── TAC ─── */
     const tac = data.tac || [];
     $('#statTac').textContent = tac.length;
     $('#tacBox').innerHTML = tac.length
