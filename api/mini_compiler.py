@@ -26,7 +26,7 @@ def lexer(source_code):
     while i < n:
         char = source_code[i]
 
-        if char.isspace():
+        if char.isspace(): 
             i += 1
             continue
 
@@ -318,6 +318,8 @@ class CodeGenerator:
 # -----------------------------
 # 5. Virtual Machine / Interpreter
 # -----------------------------
+import re
+
 class TACInterpreter:
     def __init__(self, tac_instructions):
         self.tac = tac_instructions
@@ -330,54 +332,80 @@ class TACInterpreter:
             if not line:
                 continue
 
+            # 1. أوامر الطباعة: print ...
             if line.startswith("print "):
-                raw_args = line[6:].split(", ")
-                resolved = [str(self._resolve_val(arg.strip())) for arg in raw_args]
+                content = line[6:].strip()
+                args = self._split_args(content)
+                resolved = [str(self._resolve_val(arg.strip())) for arg in args]
                 self.stdout.append(" ".join(resolved))
 
+            # 2. أوامر الإسناد: var = value
             elif "=" in line:
                 left, right = [part.strip() for part in line.split("=", 1)]
-                parts = right.split()
-
-                if len(parts) == 1:
-                    # فحص وجود المعامل الأحادي ~
-                    if parts[0].startswith("~"):
-                        val = self._resolve_val(parts[0][1:])
-                        self.env[left] = ~int(val)
-                    else:
-                        self.env[left] = self._resolve_val(parts[0])
-                elif len(parts) == 3:
-                    op1 = self._resolve_val(parts[0])
-                    op = parts[1]
-                    op2 = self._resolve_val(parts[2])
-                    self.env[left] = self._eval_op(op1, op, op2)
+                
+                # فحص النصوص الصريحة ذات المسافات
+                if (right.startswith('"') and right.endswith('"')) or (right.startswith("'") and right.endswith("'")):
+                    self.env[left] = right[1:-1]
+                else:
+                    parts = right.split()
+                    if len(parts) == 1:
+                        if parts[0].startswith("~"):
+                            val = self._resolve_val(parts[0][1:])
+                            self.env[left] = ~int(val)
+                        else:
+                            self.env[left] = self._resolve_val(parts[0])
+                    elif len(parts) == 3:
+                        op1 = self._resolve_val(parts[0])
+                        op = parts[1]
+                        op2 = self._resolve_val(parts[2])
+                        self.env[left] = self._eval_op(op1, op, op2)
 
         return self.stdout
 
+    def _split_args(self, text):
+        """تقسيم وسائط print مع الحفاظ على النصوص والمسافات"""
+        pattern = r',\s*(?=(?:[^\'"]*[\'"][^\'"]*[\'"])*[^\'"]*$)'
+        return re.split(pattern, text)
+
     def _resolve_val(self, token):
+        token = token.strip()
+        # نصوص مباشرة
         if (token.startswith('"') and token.endswith('"')) or (token.startswith("'") and token.endswith("'")):
             return token[1:-1]
+        
+        # ثوابت منطقية وقيمة فارغة
         if token == "True": return True
         if token == "False": return False
         if token == "None": return None
+        
+        # أرقام
         if token.replace(".", "", 1).isdigit():
             return float(token) if "." in token else int(token)
+            
+        # جلب القيمة من الذاكرة إذا كان متغيراً مسجلاً
         if token in self.env:
             return self.env[token]
-        return token
+            
+        # رمي Error فوري بدلاً من طباعة اسم المتغير كنص
+        raise Exception(f"NameError: name '{token}' is not defined")
 
     def _eval_op(self, left, op, right):
         try:
+            if op == "+":
+                if isinstance(left, str) or isinstance(right, str):
+                    return str(left) + str(right)
+                return left + right
             left_int = int(left)
             right_int = int(right)
+            if op == "-": return left_int - right_int
+            if op == "*": return left_int * right_int
+            if op == "/": return left_int / right_int
+            if op == "//": return left_int // right_int
+            if op == "**": return left_int ** right_int
+            if op == "%": return left_int % right_int
             if op == "&": return left_int & right_int
             if op == "|": return left_int | right_int
             if op == "^": return left_int ^ right_int
-            if op == "%": return left % right
-            if op == "+": return left + right
-            if op == "-": return left - right
-            if op == "*": return left * right
-            if op == "/": return left / right
         except Exception:
             return 0
         return 0
