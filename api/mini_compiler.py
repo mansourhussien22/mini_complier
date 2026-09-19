@@ -440,7 +440,7 @@ class CodeGenerator:
 
 
 class TACInterpreter:
-
+    
   def __init__(self, tac_instructions):
     self.tac = tac_instructions
     self.env = {}
@@ -512,26 +512,42 @@ class TACInterpreter:
         f"Hint: Ensure variable '{token}' is assigned a value prior to usage."
     )
 
-def _eval_op(self, left, op, right):
-        # 1. التعامل مع النصوص: الجمع فقط مسموح
-        if isinstance(left, str) or isinstance(right, str):
+  def _eval_op(self, left, op, right):
+        is_left_str = isinstance(left, str)
+        is_right_str = isinstance(right, str)
+
+        # 1. حالة وجود نصوص
+        if is_left_str or is_right_str:
+            # لو الطرفين استرينج والعملية جمع (+) -> دمج سليم
+            if is_left_str and is_right_str and op == "+":
+                return left + right
+            
+            # لو واحد استرينج والتاني رقم مع عملية الجمع
             if op == "+":
-                return str(left) + str(right)
+                l_type = "str" if is_left_str else type(left).__name__
+                r_type = "str" if is_right_str else type(right).__name__
+                raise Exception(
+                    f"TypeError: can only concatenate str (not \"{r_type if is_left_str else l_type}\") to str\n"
+                    f"Detail: Cannot add a string to a numeric type directly ({left} + {right}).\n"
+                    f"Hint: Use string formatting or quotes around both values like: \"{left}\" + \"{right}\""
+                )
+            
+            # أي عملية تانية غير الجمع (+, -, *, / ...) على النصوص
             raise Exception(
                 f"TypeError: unsupported operand type(s) for {op}: '{type(left).__name__}' and '{type(right).__name__}'\n"
-                f"Detail: Cannot use arithmetic operator '{op}' on text data ('{left}' {op} '{right}').\n"
-                f"Hint: Strings only support concatenation via the '+' operator."
+                f"Detail: Arithmetic operator '{op}' is not supported on text values.\n"
+                f"Hint: Mathematical operations cannot be applied to strings."
             )
 
         # 2. فحص القسمة على صفر
         if op in {"/", "//", "%"} and (right == 0 or right == "0"):
             raise Exception(
-                f"ZeroDivisionError: division by zero\n"
+                "ZeroDivisionError: division by zero\n"
                 f"Detail: Denominator evaluated to zero during '{op}' operation.\n"
                 f"Hint: Ensure the divisor expression does not evaluate to 0."
             )
 
-        # 3. معالجة الأرقام (صحيحة وعشرية)
+        # 3. معالجة الأرقام فقط (int / float)
         try:
             l_val = float(left) if isinstance(left, (int, float)) or "." in str(left) else int(left)
             r_val = float(right) if isinstance(right, (int, float)) or "." in str(right) else int(right)
@@ -549,12 +565,11 @@ def _eval_op(self, left, op, right):
             else:
                 raise Exception(f"Unsupported operator: {op}")
 
-            # إرجاع عدد صحيح إذا كان الناتج بدون كسور
             return int(res) if isinstance(res, float) and res.is_integer() else res
 
         except ValueError:
             raise Exception(
-                f"TypeError: invalid operand value\n"
+                "TypeError: invalid operand value\n"
                 f"Detail: Failed to parse '{left}' or '{right}' into a valid numeric representation.\n"
-                f"Hint: Check the data types of variables participating in this expression."
+                f"Hint: Check variable types before calculating."
             )
