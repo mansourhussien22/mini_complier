@@ -18,6 +18,7 @@ class Token:
 # -----------------------------
 # 1. Lexical Analysis
 # -----------------------------
+
 def lexer(source_code):
     tokens = []
     i = 0
@@ -319,7 +320,10 @@ class CodeGenerator:
 # 5. Virtual Machine / Interpreter
 # -----------------------------
 import re
-
+import math
+import operator
+import functools
+import string
 class TACInterpreter:
     def __init__(self, tac_instructions):
         self.tac = tac_instructions
