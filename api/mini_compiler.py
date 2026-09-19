@@ -1,415 +1,543 @@
+import functools
+import math
+import operator
+import re
+import string
+
 KEYWORDS = {"print", "True", "False", "None"}
 OPERATORS = {
-    "+", "-", "*", "/", "=", "+=", "-=", "*=", "/=", "**", "//",
-    "&", "|", "^", "~", "%", "@"
+    "+",
+    "-",
+    "*",
+    "/",
+    "=",
+    "+=",
+    "-=",
+    "*=",
+    "/=",
+    "**",
+    "//",
+    "&",
+    "|",
+    "^",
+    "~",
+    "%",
+    "@",
 }
 SYMBOLS = {"(", ")", ";", ",", "$", "#"}
 
 
 class Token:
-    def __init__(self, token_type, value):
-        self.type = token_type
-        self.value = value
 
-    def __repr__(self):
-        return f"Token({self.type}, '{self.value}')"
+  def __init__(self, token_type, value, line=1):
+    self.type = token_type
+    self.value = value
+    self.line = line
+
+  def to_dict(self):
+    return {"type": self.type, "value": self.value, "line": self.line}
+
+  def __repr__(self):
+    return f"Token({self.type}, '{self.value}', line={self.line})"
 
 
 # -----------------------------
 # 1. Lexical Analysis
 # -----------------------------
 
+
 def lexer(source_code):
-    tokens = []
-    i = 0
-    n = len(source_code)
+  tokens = []
+  i = 0
+  n = len(source_code)
+  line = 1
 
-    while i < n:
-        char = source_code[i]
+  while i < n:
+    char = source_code[i]
 
-        if char.isspace(): 
-            i += 1
-            continue
+    if char == "\n":
+      line += 1
+      i += 1
+      continue
 
-        # التعامل مع # كرمز خاص أو كتعليق حسب السياق
-        # إذا تبعه مسافة أو نص بدون معامل، يعتبر تعليقاً يتم تخطيه
-        if char == "#" and (i + 1 < n and source_code[i+1].isalpha()):
-            tokens.append(Token("SPECIAL", "#"))
-            i += 1
-            continue
-        elif char == "#":
-            while i < n and source_code[i] != "\n":
-                i += 1
-            continue
+    if char.isspace():
+      i += 1
+      continue
 
-        # تجاهل الـ Docstrings
-        if source_code[i:i+3] in ('"""', "'''"):
-            quote = source_code[i:i+3]
-            i += 3
-            while i < n and source_code[i:i+3] != quote:
-                i += 1
-            i += 3
-            continue
+    if char == "#" and (i + 1 < n and source_code[i + 1].isalpha()):
+      tokens.append(Token("SPECIAL", "#", line))
+      i += 1
+      continue
+    elif char == "#":
+      while i < n and source_code[i] != "\n":
+        i += 1
+      continue
 
-        # المعاملات المركبة الثنائية
-        two_char = source_code[i:i+2]
-        if two_char in {"+=", "-=", "*=", "/=", "**", "//", "&=", "|="}:
-            tokens.append(Token("OPERATOR", two_char))
-            i += 2
-            continue
+    if source_code[i : i + 3] in ('"""', "'''"):
+      quote = source_code[i : i + 3]
+      i += 3
+      while i < n and source_code[i : i + 3] != quote:
+        if source_code[i] == "\n":
+          line += 1
+        i += 1
+      i += 3
+      continue
 
-        # النصوص
-        if char in ('"', "'"):
-            quote = char
-            i += 1
-            string_val = ""
-            while i < n and source_code[i] != quote:
-                string_val += source_code[i]
-                i += 1
-            if i >= n:
-                raise Exception("Unterminated string literal")
-            i += 1
-            tokens.append(Token("STRING", string_val))
-            continue
+    two_char = source_code[i : i + 2]
+    if two_char in {"+=", "-=", "*=", "/=", "**", "//", "&=", "|="}:
+      tokens.append(Token("OPERATOR", two_char, line))
+      i += 2
+      continue
 
-        # دعم $ مع الحروف والشرطة السفلية في أسماء المتغيرات
-        if char.isalpha() or char in {"_", "$"}:
-            word = ""
-            while i < n and (source_code[i].isalnum() or source_code[i] in {"_", "$"}):
-                word += source_code[i]
-                i += 1
+    if char in ('"', "'"):
+      quote = char
+      i += 1
+      string_val = ""
+      start_line = line
+      while i < n and source_code[i] != quote:
+        if source_code[i] == "\n":
+          line += 1
+        string_val += source_code[i]
+        i += 1
+      if i >= n:
+        raise Exception(
+            f"Lexer Error at line {start_line}: Unterminated string literal\n"
+            f"Detail: Closing quote ({quote}) is missing before end of file.\n"
+            f"Hint: Make sure every opened string literal has a matching closing"
+            f" quote on the same block."
+        )
+      i += 1
+      tokens.append(Token("STRING", string_val, start_line))
+      continue
 
-            if word in KEYWORDS:
-                tokens.append(Token("KEYWORD", word))
-            else:
-                tokens.append(Token("IDENTIFIER", word))
-            continue
+    if char.isalpha() or char in {"_", "$"}:
+      word = ""
+      while i < n and (source_code[i].isalnum() or source_code[i] in {"_", "$"}):
+        word += source_code[i]
+        i += 1
 
-        # الأرقام
-        if char.isdigit():
-            number = ""
-            has_dot = False
-            while i < n and (source_code[i].isdigit() or source_code[i] == "."):
-                if source_code[i] == ".":
-                    if has_dot:
-                        break
-                    has_dot = True
-                number += source_code[i]
-                i += 1
-            tokens.append(Token("NUMBER", number))
-            continue
+      if word in KEYWORDS:
+        tokens.append(Token("KEYWORD", word, line))
+      else:
+        tokens.append(Token("IDENTIFIER", word, line))
+      continue
 
-        # المعاملات الأحادية والرموز الخاصة (&, |, ^, ~, %, @)
-        if char in OPERATORS:
-            tokens.append(Token("OPERATOR", char))
-            i += 1
-            continue
+    if char.isdigit():
+      number = ""
+      has_dot = False
+      while i < n and (source_code[i].isdigit() or source_code[i] == "."):
+        if source_code[i] == ".":
+          if has_dot:
+            break
+          has_dot = True
+        number += source_code[i]
+        i += 1
+      tokens.append(Token("NUMBER", number, line))
+      continue
 
-        if char in SYMBOLS:
-            tokens.append(Token("SYMBOL", char))
-            i += 1
-            continue
+    if char in OPERATORS:
+      tokens.append(Token("OPERATOR", char, line))
+      i += 1
+      continue
 
-        raise Exception(f"Unknown character: {char}")
+    if char in SYMBOLS:
+      tokens.append(Token("SYMBOL", char, line))
+      i += 1
+      continue
 
-    return tokens
+    raise Exception(
+        f"Lexer Error at line {line}: Unknown character '{char}'\n"
+        f"Detail: Character '{char}' is not recognized as a valid operator,"
+        " symbol, or identifier.\n"
+        "Hint: Remove this invalid character or verify proper syntax."
+    )
+
+  return tokens
 
 
 # -----------------------------
 # 2. Syntax Analysis
 # -----------------------------
+
+
 class Parser:
-    def __init__(self, tokens):
-        self.tokens = tokens
-        self.pos = 0
 
-    def current_token(self):
-        if self.pos < len(self.tokens):
-            return self.tokens[self.pos]
-        return None
+  def __init__(self, tokens):
+    self.tokens = tokens
+    self.pos = 0
 
-    def match(self, token_type, value=None):
-        token = self.current_token()
-        if token is None:
-            raise Exception("Unexpected end of code")
-        if token.type != token_type:
-            raise Exception(f"Expected {token_type}, got {token.type}")
-        if value is not None and token.value != value:
-            raise Exception(f"Expected '{value}', got '{token.value}'")
+  def current_token(self):
+    if self.pos < len(self.tokens):
+      return self.tokens[self.pos]
+    return None
 
-        self.pos += 1
-        return token
+  def match(self, token_type, value=None):
+    token = self.current_token()
+    if token is None:
+      raise Exception(
+          "Parser Error: Unexpected end of code\nDetail: The parser reached the"
+          " end of input while expecting further expressions or closing"
+          " tokens.\nHint: Check for missing closing parentheses, operands, or"
+          " statement terminators."
+      )
 
-    def parse(self):
-        statements = []
-        while self.current_token() is not None:
-            statements.append(self.parse_statement())
-            if self.current_token() and self.current_token().type == "SYMBOL" and self.current_token().value == ";":
-                self.match("SYMBOL", ";")
-        return statements
+    line_num = getattr(token, "line", 1)
 
-    def parse_statement(self):
-        token = self.current_token()
+    if token.type != token_type:
+      found_val = token.value
+      found_type = token.type
+      hint_msg = (
+          "This language uses direct assignment (e.g., x = 'text') rather than"
+          " type keywords."
+          if found_val in {"string", "int", "float", "double", "bool"}
+          else "Verify the expected statement structure."
+      )
+      raise Exception(
+          f"Syntax Error at line {line_num}: Expected {token_type}, got"
+          f" '{found_val}' ({found_type})\n"
+          f"Detail: The parser encountered '{found_val}' where a token of type"
+          f" '{token_type}' was required.\n"
+          f"Hint: {hint_msg}"
+      )
 
-        if token.type == "KEYWORD" and token.value == "print":
-            return self.parse_print()
+    if value is not None and token.value != value:
+      raise Exception(
+          f"Syntax Error at line {line_num}: Expected '{value}', got"
+          f" '{token.value}'\n"
+          f"Detail: Statement expected explicit symbol or operator '{value}'.\n"
+          f"Hint: Add or replace with the expected symbol '{value}'."
+      )
 
-        if token.type == "IDENTIFIER":
-            return self.parse_assignment()
+    self.pos += 1
+    return token
 
-        raise Exception(f"Invalid statement starting with: {token.value}")
+  def parse(self):
+    statements = []
+    while self.current_token() is not None:
+      statements.append(self.parse_statement())
+      if (
+          self.current_token()
+          and self.current_token().type == "SYMBOL"
+          and self.current_token().value == ";"
+      ):
+        self.match("SYMBOL", ";")
+    return statements
 
-    def parse_assignment(self):
-        var_name = self.match("IDENTIFIER").value
-        op_token = self.match("OPERATOR").value
-        expression = self.parse_expression()
+  def parse_statement(self):
+    token = self.current_token()
 
-        if op_token != "=":
-            base_op = op_token[0]
-            expression = {
-                "type": "binary_expression",
-                "operator": base_op,
-                "left": {"type": "identifier", "name": var_name},
-                "right": expression
-            }
+    if token.type == "KEYWORD" and token.value == "print":
+      return self.parse_print()
 
-        return {
-            "type": "declaration",
-            "name": var_name,
-            "expression": expression
+    if token.type == "IDENTIFIER":
+      return self.parse_assignment()
+
+    line_num = getattr(token, "line", 1)
+    raise Exception(
+        f"Syntax Error at line {line_num}: Invalid statement starting with"
+        f" '{token.value}'\n"
+        f"Detail: Statements must start with an assignment identifier or 'print'"
+        " keyword.\n"
+        f"Hint: Begin with a variable assignment (e.g., {token.value} = ...)"
+        " or a print() statement."
+    )
+
+  def parse_assignment(self):
+    var_token = self.match("IDENTIFIER")
+    var_name = var_token.value
+    line_num = var_token.line
+
+    op_token = self.match("OPERATOR").value
+    expression = self.parse_expression()
+
+    if op_token != "=":
+      base_op = op_token[0]
+      expression = {
+          "type": "binary_expression",
+          "operator": base_op,
+          "left": {"type": "identifier", "name": var_name, "line": line_num},
+          "right": expression,
+      }
+
+    return {
+        "type": "declaration",
+        "name": var_name,
+        "expression": expression,
+        "line": line_num,
+    }
+
+  def parse_print(self):
+    self.match("KEYWORD", "print")
+    self.match("SYMBOL", "(")
+    args = []
+    if self.current_token() and not (
+        self.current_token().type == "SYMBOL"
+        and self.current_token().value == ")"
+    ):
+      args.append(self.parse_expression())
+      while (
+          self.current_token()
+          and self.current_token().type == "SYMBOL"
+          and self.current_token().value == ","
+      ):
+        self.match("SYMBOL", ",")
+        args.append(self.parse_expression())
+
+    self.match("SYMBOL", ")")
+    return {"type": "print", "arguments": args}
+
+  def parse_expression(self):
+    left = self.parse_term()
+    valid_ops = {"+", "-", "*", "/", "**", "//", "&", "|", "^", "%"}
+    while self.current_token() is not None:
+      token = self.current_token()
+      if token.type == "OPERATOR" and token.value in valid_ops:
+        op = self.match("OPERATOR").value
+        right = self.parse_term()
+        left = {
+            "type": "binary_expression",
+            "operator": op,
+            "left": left,
+            "right": right,
         }
+      else:
+        break
+    return left
 
-    def parse_print(self):
-        self.match("KEYWORD", "print")
-        self.match("SYMBOL", "(")
-        args = []
-        if self.current_token() and not (self.current_token().type == "SYMBOL" and self.current_token().value == ")"):
-            args.append(self.parse_expression())
-            while self.current_token() and self.current_token().type == "SYMBOL" and self.current_token().value == ",":
-                self.match("SYMBOL", ",")
-                args.append(self.parse_expression())
+  def parse_term(self):
+    token = self.current_token()
 
-        self.match("SYMBOL", ")")
-        return {"type": "print", "arguments": args}
+    if token.type == "OPERATOR" and token.value == "~":
+      self.match("OPERATOR", "~")
+      term = self.parse_term()
+      return {"type": "unary_expression", "operator": "~", "operand": term}
 
-    def parse_expression(self):
-        left = self.parse_term()
-        # دعم العمليات الحسابية وعمليات البت الخاصة (&, |, ^, %, //, **)
-        valid_ops = {"+", "-", "*", "/", "**", "//", "&", "|", "^", "%"}
-        while self.current_token() is not None:
-            token = self.current_token()
-            if token.type == "OPERATOR" and token.value in valid_ops:
-                op = self.match("OPERATOR").value
-                right = self.parse_term()
-                left = {
-                    "type": "binary_expression",
-                    "operator": op,
-                    "left": left,
-                    "right": right
-                }
-            else:
-                break
-        return left
+    if token.type == "SYMBOL" and token.value == "(":
+      self.match("SYMBOL", "(")
+      expr = self.parse_expression()
+      self.match("SYMBOL", ")")
+      return expr
 
-    def parse_term(self):
-        token = self.current_token()
+    if token.type == "NUMBER":
+      return {"type": "number", "value": self.match("NUMBER").value}
 
-        # دعم الـ Unary Operator (مثل ~ للأعداد الثنائية)
-        if token.type == "OPERATOR" and token.value == "~":
-            self.match("OPERATOR", "~")
-            term = self.parse_term()
-            return {"type": "unary_expression", "operator": "~", "operand": term}
+    if token.type == "STRING":
+      return {"type": "string", "value": f'"{self.match("STRING").value}"'}
 
-        if token.type == "SYMBOL" and token.value == "(":
-            self.match("SYMBOL", "(")
-            expr = self.parse_expression()
-            self.match("SYMBOL", ")")
-            return expr
+    if token.type == "KEYWORD" and token.value in {"True", "False", "None"}:
+      return {"type": "literal", "value": self.match("KEYWORD").value}
 
-        if token.type == "NUMBER":
-            return {"type": "number", "value": self.match("NUMBER").value}
+    if token.type == "IDENTIFIER":
+      return {
+          "type": "identifier",
+          "name": self.match("IDENTIFIER").value,
+          "line": getattr(token, "line", 1),
+      }
 
-        if token.type == "STRING":
-            return {"type": "string", "value": f'"{self.match("STRING").value}"'}
-
-        if token.type == "KEYWORD" and token.value in {"True", "False", "None"}:
-            return {"type": "literal", "value": self.match("KEYWORD").value}
-
-        if token.type == "IDENTIFIER":
-            return {"type": "identifier", "name": self.match("IDENTIFIER").value}
-
-        raise Exception(f"Invalid expression term: {token.value}")
+    line_num = getattr(token, "line", 1)
+    raise Exception(
+        f"Syntax Error at line {line_num}: Invalid expression term"
+        f" '{token.value}'\n"
+        f"Detail: Expected an operand (identifier, number, string, or"
+        f" sub-expression) but found '{token.value}'.\n"
+        "Hint: Check for missing operators, mismatched parentheses, or dangling"
+        " punctuation."
+    )
 
 
 # -----------------------------
 # 3. Semantic Analysis
 # -----------------------------
+
+
 def semantic_analysis(ast):
-    declared_variables = set()
-    errors = []
+  declared_variables = set()
+  errors = []
 
-    def check_expression(expression):
-        if not isinstance(expression, dict):
-            return
-        if expression["type"] == "identifier":
-            if expression["name"] not in declared_variables:
-                errors.append(f"NameError: name '{expression['name']}' is not defined")
-        elif expression["type"] == "binary_expression":
-            check_expression(expression["left"])
-            check_expression(expression["right"])
-        elif expression["type"] == "unary_expression":
-            check_expression(expression["operand"])
+  def check_expression(expression):
+    if not isinstance(expression, dict):
+      return
+    if expression["type"] == "identifier":
+      var_name = expression["name"]
+      line_num = expression.get("line", 1)
+      if var_name not in declared_variables:
+        errors.append(
+            f"Semantic Error at line {line_num}: NameError: name '{var_name}'"
+            " is not defined\n"
+            f"Detail: Identifier '{var_name}' is referenced before declaration"
+            " in current scope.\n"
+            f"Hint: Initialize or declare '{var_name}' prior to reading it"
+            f" (e.g., {var_name} = 0)."
+        )
+    elif expression["type"] == "binary_expression":
+      check_expression(expression["left"])
+      check_expression(expression["right"])
+    elif expression["type"] == "unary_expression":
+      check_expression(expression["operand"])
 
-    for statement in ast:
-        if statement["type"] == "declaration":
-            check_expression(statement["expression"])
-            declared_variables.add(statement["name"])
-        elif statement["type"] == "print":
-            for arg in statement["arguments"]:
-                check_expression(arg)
+  for statement in ast:
+    if statement["type"] == "declaration":
+      check_expression(statement["expression"])
+      declared_variables.add(statement["name"])
+    elif statement["type"] == "print":
+      for arg in statement["arguments"]:
+        check_expression(arg)
 
-    return errors
+  return errors
 
 
 # -----------------------------
 # 4. Three Address Code (TAC)
 # -----------------------------
+
+
 class CodeGenerator:
-    def __init__(self):
-        self.temp_count = 0
-        self.code = []
 
-    def new_temp(self):
-        self.temp_count += 1
-        return f"t{self.temp_count}"
+  def __init__(self):
+    self.temp_count = 0
+    self.code = []
 
-    def generate_expression(self, expression):
-        if expression["type"] in ("number", "string", "literal"):
-            return expression["value"]
+  def new_temp(self):
+    self.temp_count += 1
+    return f"t{self.temp_count}"
 
-        if expression["type"] == "identifier":
-            return expression["name"]
+  def generate_expression(self, expression):
+    if expression["type"] in ("number", "string", "literal"):
+      return expression["value"]
 
-        if expression["type"] == "unary_expression":
-            operand = self.generate_expression(expression["operand"])
-            temp = self.new_temp()
-            self.code.append(f"{temp} = {expression['operator']}{operand}")
-            return temp
+    if expression["type"] == "identifier":
+      return expression["name"]
 
-        if expression["type"] == "binary_expression":
-            left = self.generate_expression(expression["left"])
-            right = self.generate_expression(expression["right"])
-            temp = self.new_temp()
-            self.code.append(f"{temp} = {left} {expression['operator']} {right}")
-            return temp
+    if expression["type"] == "unary_expression":
+      operand = self.generate_expression(expression["operand"])
+      temp = self.new_temp()
+      self.code.append(f"{temp} = {expression['operator']}{operand}")
+      return temp
 
-    def generate(self, ast):
-        for statement in ast:
-            if statement["type"] == "declaration":
-                result = self.generate_expression(statement["expression"])
-                self.code.append(f"{statement['name']} = {result}")
+    if expression["type"] == "binary_expression":
+      left = self.generate_expression(expression["left"])
+      right = self.generate_expression(expression["right"])
+      temp = self.new_temp()
+      self.code.append(f"{temp} = {left} {expression['operator']} {right}")
+      return temp
 
-            elif statement["type"] == "print":
-                args = [self.generate_expression(arg) for arg in statement["arguments"]]
-                self.code.append(f"print {', '.join(args)}")
+  def generate(self, ast):
+    for statement in ast:
+      if statement["type"] == "declaration":
+        result = self.generate_expression(statement["expression"])
+        self.code.append(f"{statement['name']} = {result}")
 
-        return self.code
+      elif statement["type"] == "print":
+        args = [self.generate_expression(arg) for arg in statement["arguments"]]
+        self.code.append(f"print {', '.join(args)}")
+
+    return self.code
 
 
 # -----------------------------
 # 5. Virtual Machine / Interpreter
 # -----------------------------
-import re
-import math
-import operator
-import functools
-import string
+
+
 class TACInterpreter:
-    def __init__(self, tac_instructions):
-        self.tac = tac_instructions
-        self.env = {}
-        self.stdout = []
 
-    def run(self):
-        for line in self.tac:
-            line = line.strip()
-            if not line:
-                continue
+  def __init__(self, tac_instructions):
+    self.tac = tac_instructions
+    self.env = {}
+    self.stdout = []
 
-            # 1. أوامر الطباعة: print ...
-            if line.startswith("print "):
-                content = line[6:].strip()
-                args = self._split_args(content)
-                resolved = [str(self._resolve_val(arg.strip())) for arg in args]
-                self.stdout.append(" ".join(resolved))
+  def run(self):
+    for line in self.tac:
+      line = line.strip()
+      if not line:
+        continue
 
-            # 2. أوامر الإسناد: var = value
-            elif "=" in line:
-                left, right = [part.strip() for part in line.split("=", 1)]
-                
-                # فحص النصوص الصريحة ذات المسافات
-                if (right.startswith('"') and right.endswith('"')) or (right.startswith("'") and right.endswith("'")):
-                    self.env[left] = right[1:-1]
-                else:
-                    parts = right.split()
-                    if len(parts) == 1:
-                        if parts[0].startswith("~"):
-                            val = self._resolve_val(parts[0][1:])
-                            self.env[left] = ~int(val)
-                        else:
-                            self.env[left] = self._resolve_val(parts[0])
-                    elif len(parts) == 3:
-                        op1 = self._resolve_val(parts[0])
-                        op = parts[1]
-                        op2 = self._resolve_val(parts[2])
-                        self.env[left] = self._eval_op(op1, op, op2)
+      if line.startswith("print "):
+        content = line[6:].strip()
+        args = self._split_args(content)
+        resolved = [str(self._resolve_val(arg.strip())) for arg in args]
+        self.stdout.append(" ".join(resolved))
 
-        return self.stdout
+      elif "=" in line:
+        left, right = [part.strip() for part in line.split("=", 1)]
 
-    def _split_args(self, text):
-        """تقسيم وسائط print مع الحفاظ على النصوص والمسافات"""
-        pattern = r',\s*(?=(?:[^\'"]*[\'"][^\'"]*[\'"])*[^\'"]*$)'
-        return re.split(pattern, text)
+        if (right.startswith('"') and right.endswith('"')) or (
+            right.startswith("'") and right.endswith("'")
+        ):
+          self.env[left] = right[1:-1]
+        else:
+          parts = right.split()
+          if len(parts) == 1:
+            if parts[0].startswith("~"):
+              val = self._resolve_val(parts[0][1:])
+              self.env[left] = ~int(val)
+            else:
+              self.env[left] = self._resolve_val(parts[0])
+          elif len(parts) == 3:
+            op1 = self._resolve_val(parts[0])
+            op = parts[1]
+            op2 = self._resolve_val(parts[2])
+            self.env[left] = self._eval_op(op1, op, op2)
 
-    def _resolve_val(self, token):
-        token = token.strip()
-        # نصوص مباشرة
-        if (token.startswith('"') and token.endswith('"')) or (token.startswith("'") and token.endswith("'")):
-            return token[1:-1]
-        
-        # ثوابت منطقية وقيمة فارغة
-        if token == "True": return True
-        if token == "False": return False
-        if token == "None": return None
-        
-        # أرقام
-        if token.replace(".", "", 1).isdigit():
-            return float(token) if "." in token else int(token)
-            
-        # جلب القيمة من الذاكرة إذا كان متغيراً مسجلاً
-        if token in self.env:
-            return self.env[token]
-            
-        # رمي Error فوري بدلاً من طباعة اسم المتغير كنص
-        raise Exception(f"NameError: name '{token}' is not defined")
+    return self.stdout
 
-    def _eval_op(self, left, op, right):
-        try:
-            if op == "+":
-                if isinstance(left, str) or isinstance(right, str):
-                    return str(left) + str(right)
-                return left + right
-            left_int = int(left)
-            right_int = int(right)
-            if op == "-": return left_int - right_int
-            if op == "*": return left_int * right_int
-            if op == "/": return left_int / right_int
-            if op == "//": return left_int // right_int
-            if op == "**": return left_int ** right_int
-            if op == "%": return left_int % right_int
-            if op == "&": return left_int & right_int
-            if op == "|": return left_int | right_int
-            if op == "^": return left_int ^ right_int
-        except Exception:
-            return 0
-        return 0
+  def _split_args(self, text):
+    pattern = r',\s*(?=(?:[^\'"]*[\'"][^\'"]*[\'"])*[^\'"]*$)'
+    return re.split(pattern, text)
+
+  def _resolve_val(self, token):
+    token = token.strip()
+    if (token.startswith('"') and token.endswith('"')) or (
+        token.startswith("'") and token.endswith("'")
+    ):
+      return token[1:-1]
+
+    if token == "True":
+      return True
+    if token == "False":
+      return False
+    if token == "None":
+      return None
+
+    if token.replace(".", "", 1).isdigit():
+      return float(token) if "." in token else int(token)
+
+    if token in self.env:
+      return self.env[token]
+
+    raise Exception(
+        f"Runtime Error: Variable '{token}' is not defined.\n"
+        f"Detail: Attempted to access or evaluate '{token}' in runtime without"
+        " binding.\n"
+        f"Hint: Ensure variable '{token}' is assigned a value prior to usage."
+    )
+
+  def _eval_op(self, left, op, right):
+    try:
+      if op == "+":
+        if isinstance(left, str) or isinstance(right, str):
+          return str(left) + str(right)
+        return left + right
+      left_int = int(left)
+      right_int = int(right)
+      if op == "-":
+        return left_int - right_int
+      if op == "*":
+        return left_int * right_int
+      if op == "/":
+        return left_int / right_int
+      if op == "//":
+        return left_int // right_int
+      if op == "**":
+        return left_int**right_int
+      if op == "%":
+        return left_int % right_int
+      if op == "&":
+        return left_int & right_int
+      if op == "|":
+        return left_int | right_int
+      if op == "^":
+        return left_int ^ right_int
+    except Exception:
+      return 0
+    return 0

@@ -1161,23 +1161,46 @@ function detectStage(err){
 function openErrorModal(errors){
   const body = $('#modalBody');
   $('#modalCount').textContent = errors.length;
-  body.innerHTML = errors.map((e,i)=>{
-    const stage  = detectStage(e);
-    const msg    = (e && typeof e === 'object') ? (e.message || JSON.stringify(e)) : String(e);
-    const detail = (e && typeof e === 'object' && e.detail) ? e.detail : '';
-    return `<div class="err-item fade-in" style="animation-delay:${i*60}ms" onclick="this.classList.toggle('open');sfxClick()">
+  body.innerHTML = errors.map((e, i) => {
+    let stage = detectStage(e);
+    let msg = "";
+    let detail = "";
+
+    if (e && typeof e === 'object') {
+      msg = e.message || JSON.stringify(e);
+      detail = e.detail || "";
+    } else {
+      msg = String(e);
+      // توليد تفاصيل ذكية تلقائياً لو المترجم بعت نص بس
+      if (msg.includes("got IDENTIFIER")) {
+        detail = "Hint: You typed two identifiers consecutively (e.g., 'string x').\nThis compiler does not use type keywords before variable names like C/Java.\nUse direct assignment: x = 'mansour'";
+      } else if (msg.includes("NameError")) {
+        detail = "Hint: A variable was referenced before being declared or assigned a value in memory.";
+      } else {
+        detail = `Encountered during compilation phase: ${stage}.\nPlease verify syntax, punctuation, and variable names.`;
+      }
+    }
+
+    return `<div class="err-item fade-in open" style="animation-delay:${i*60}ms" onclick="this.classList.toggle('open');sfxClick()">
       <div class="err-head">
         <span class="err-stage">${esc(stage)}</span>
         <span class="err-msg">${esc(msg)}</span>
         <svg class="err-chev w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
       </div>
-      ${detail?`<div class="err-detail"><div class="err-detail-inner"><span class="label">Details</span>${esc(detail)}</div></div>`:''}
+      <div class="err-detail">
+        <div class="err-detail-inner">
+          <span class="label">Details & Solution</span>
+          ${esc(detail)}
+        </div>
+      </div>
     </div>`;
   }).join('');
+  
   $('#errorModal').classList.add('show');
   document.body.style.overflow = 'hidden';
   sfxError();
 }
+
 function closeErrorModal(){
   $('#errorModal').classList.remove('show');
   document.body.style.overflow = '';
