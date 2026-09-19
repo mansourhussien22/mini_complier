@@ -512,32 +512,49 @@ class TACInterpreter:
         f"Hint: Ensure variable '{token}' is assigned a value prior to usage."
     )
 
-  def _eval_op(self, left, op, right):
-    try:
-      if op == "+":
+def _eval_op(self, left, op, right):
+        # 1. التعامل مع النصوص: الجمع فقط مسموح
         if isinstance(left, str) or isinstance(right, str):
-          return str(left) + str(right)
-        return left + right
-      left_int = int(left)
-      right_int = int(right)
-      if op == "-":
-        return left_int - right_int
-      if op == "*":
-        return left_int * right_int
-      if op == "/":
-        return left_int / right_int
-      if op == "//":
-        return left_int // right_int
-      if op == "**":
-        return left_int**right_int
-      if op == "%":
-        return left_int % right_int
-      if op == "&":
-        return left_int & right_int
-      if op == "|":
-        return left_int | right_int
-      if op == "^":
-        return left_int ^ right_int
-    except Exception:
-      return 0
-    return 0
+            if op == "+":
+                return str(left) + str(right)
+            raise Exception(
+                f"TypeError: unsupported operand type(s) for {op}: '{type(left).__name__}' and '{type(right).__name__}'\n"
+                f"Detail: Cannot use arithmetic operator '{op}' on text data ('{left}' {op} '{right}').\n"
+                f"Hint: Strings only support concatenation via the '+' operator."
+            )
+
+        # 2. فحص القسمة على صفر
+        if op in {"/", "//", "%"} and (right == 0 or right == "0"):
+            raise Exception(
+                f"ZeroDivisionError: division by zero\n"
+                f"Detail: Denominator evaluated to zero during '{op}' operation.\n"
+                f"Hint: Ensure the divisor expression does not evaluate to 0."
+            )
+
+        # 3. معالجة الأرقام (صحيحة وعشرية)
+        try:
+            l_val = float(left) if isinstance(left, (int, float)) or "." in str(left) else int(left)
+            r_val = float(right) if isinstance(right, (int, float)) or "." in str(right) else int(right)
+
+            if op == "+": res = l_val + r_val
+            elif op == "-": res = l_val - r_val
+            elif op == "*": res = l_val * r_val
+            elif op == "/": res = l_val / r_val
+            elif op == "//": res = int(l_val) // int(r_val)
+            elif op == "**": res = l_val ** r_val
+            elif op == "%": res = int(l_val) % int(r_val)
+            elif op == "&": res = int(l_val) & int(r_val)
+            elif op == "|": res = int(l_val) | int(r_val)
+            elif op == "^": res = int(l_val) ^ int(r_val)
+            else:
+                raise Exception(f"Unsupported operator: {op}")
+
+            # إرجاع عدد صحيح إذا كان الناتج بدون كسور
+            return int(res) if isinstance(res, float) and res.is_integer() else res
+
+        except ValueError:
+            raise Exception(
+                f"TypeError: invalid operand value\n"
+                f"Detail: Failed to parse '{left}' or '{right}' into a valid numeric representation.\n"
+                f"Hint: Check the data types of variables participating in this expression."
+            )
